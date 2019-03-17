@@ -30,6 +30,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
+	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4')
+	compile('org.webjars:bootstrap:4.3.0')
+	compile('org.webjars:jquery:3.3.1')
+	compile('org.webjars.npm:popper.js:1.14.7')
 	compileOnly 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
