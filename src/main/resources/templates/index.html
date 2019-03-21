@@ -1,19 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Totality Everywhere</title>
-
-
+    <div th:replace="fragments/header :: header-css"/>
+    <title th:text="#{home.title}">Index</title>
 </head>
 <body>
+<div th:replace="fragments/header :: navbarTopMenu"/>
 
 <div class="container">
 
-    <h3 class="mb-5">Index page</h3>
-
+    <h2 th:text="#{home.title}">Home page</h2>
+    <p>Привет, это наша первая страничка</p>
 
 </div>
 <!-- /.container -->
-
+<div th:replace="fragments/footer :: footer"/>
 </body>
 </html>
