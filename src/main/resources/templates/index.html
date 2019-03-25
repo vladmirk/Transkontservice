@@ -2,14 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="fragments/header :: header-css"/>
+
     <title th:text="#{home.title}">Index</title>
 </head>
 <body>
-<div th:replace="fragments/header :: navbarTopMenu"/>
+<!--<div th:replace="fragments/header :: navbarTopMenu"/>-->
 
 <div class="container">
-
-    <h2 th:text="#{home.title}">Home page</h2>
+    <div th:replace="fragments/header :: topnavbar"/>
+    <h3 th:text="#{home.title}">Home page</h3>
+    <div th:replace="fragments/header :: my1"/>
     <p>Привет, это наша первая страничка</p>
 
 </div>
