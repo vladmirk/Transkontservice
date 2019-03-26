@@ -44,8 +44,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .headers().frameOptions().disable();
     }
 
-    @Autowired
-    public void configureJPAUsers(AuthenticationManagerBuilder auth, AppUserDetailsService detailsService) throws Exception {
-        auth.userDetailsService(detailsService);
-    }
+//    @Autowired
+//    public void configureJPAUsers(AuthenticationManagerBuilder auth, AppUserDetailsService detailsService) throws Exception {
+//        auth.userDetailsService(detailsService);
+//    }
 }
