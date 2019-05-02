@@ -1,21 +1,41 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="fragments/header :: header-css"/>
+  <head>
+    <div th:replace="fragments/header :: header-css" />
 
     <title th:text="#{home.title}">Index</title>
-</head>
-<body>
+  </head>
+  <body>
 
-<div class="container">
-    <div th:replace="fragments/header :: topnavbar"/>
     <div class="container">
-      <h3 th:text="#{home.title}">Home page</h3>
-      <div th:replace="fragments/header :: my1"/>
-      <p>Привет, это наша первая страничка</p>
+      <div th:replace="fragments/header :: topnavbar" />
+      <div class="container">
+        <h3 th:text="#{home.title}">Home page</h3>
+        <div th:replace="fragments/header :: my1" />
+        <p>Привет, это наша первая страничка</p>
+        <form th:action="testForm" th:method="post">
+          <input type="text" class="form-control" id="suggestTest" th:name="suggestTest" placeholder="Some Text" />
+          <input type="text" readonly class="form-control-plaintext" id="suggestTestCode" th:name="suggestTestCode" />
+          <script>
+            $(document).ready(function () {
+              $('#suggestTest').autocomplete({
+                serviceUrl: '/suggest/expeditors',
+                minChars: 2,
+                onSelect: function (suggestion) {
+                  $('#suggestTestCode').val(suggestion.data);
+                  // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+                },
+                onSearchStart: function (params) {
+                  $('#suggestTestCode').val('');
+                }
+              });
+            });
+          </script>
+          <button type="submit" class="btn btn-primary">OK</button>
+        </form>
+      </div>
     </div>
-</div>
-<!-- /.container -->
-<div th:replace="fragments/footer :: footer"/>
-</body>
+    <!-- /.container -->
+    <div th:replace="fragments/footer :: footer" />
+  </body>
 </html>
