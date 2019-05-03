@@ -8,6 +8,8 @@ public interface ExpeditorRepository extends CrudRepository<Expeditor, Long> {
 
   Expeditor findByCode(String code);
 
-  List<Expeditor> findAllByCodeLikeOrNameLike(String code, String name);
+//  List<Expeditor> findExpeditorsByByCodeLikeOrNameLike(String code, String name);
+
+  List<Expeditor> findExpeditorsByCodeContainingOrNameContainingAllIgnoreCase(String code, String name);
 
 }

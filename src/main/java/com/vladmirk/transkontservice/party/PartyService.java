@@ -16,7 +16,8 @@ public class PartyService {
 
   public List<Expeditor> findExpeditors(String exp) {
     String s = '%' + exp + '%';
-    return expeditorRepository.findAllByCodeLikeOrNameLike(s, s);
+    s = s.toUpperCase();
+    return expeditorRepository.findExpeditorsByCodeContainingOrNameContainingAllIgnoreCase(s, s);
   }
 
 }

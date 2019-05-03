@@ -20,7 +20,7 @@
             $(document).ready(function () {
               $('#suggestTest').autocomplete({
                 serviceUrl: '/suggest/expeditors',
-                minChars: 2,
+                // minChars: 2,
                 onSelect: function (suggestion) {
                   $('#suggestTestCode').val(suggestion.data);
                   // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);

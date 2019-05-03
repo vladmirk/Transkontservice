@@ -2,7 +2,7 @@ package com.vladmirk.transkontservice;
 
 import com.vladmirk.transkontservice.party.Expeditor;
 import com.vladmirk.transkontservice.party.PartyService;
-import com.vladmirk.transkontservice.shipping.Suggestions;
+import com.vladmirk.transkontservice.party.Suggestions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +41,14 @@ public class HomeController {
   @ResponseBody
   public Suggestions getExpeditors(@RequestParam(name = "query", defaultValue = "", required = false) String expeditor) {
     Suggestions suggestions = new Suggestions();
-    for (Expeditor e : partyService.findExpeditors(expeditor)) {
-      suggestions.add(e.getCode(), e.getName());
+    if (expeditor.length() > 1) {
+      for (Expeditor e : partyService.findExpeditors(expeditor)) {
+        suggestions.add(e.getCode(), e.getName());
+      }
+    } else {
+      suggestions.add("default", "default");
     }
+
     return suggestions;
   }
 

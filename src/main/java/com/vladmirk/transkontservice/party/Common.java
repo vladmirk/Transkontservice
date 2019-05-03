@@ -1,4 +1,4 @@
-package com.vladmirk.transkontservice.shipping;
+package com.vladmirk.transkontservice.party;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

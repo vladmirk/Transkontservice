@@ -2,31 +2,78 @@ package com.vladmirk.transkontservice;
 
 import com.vladmirk.transkontservice.party.Expeditor;
 import com.vladmirk.transkontservice.party.ExpeditorRepository;
+import com.vladmirk.transkontservice.shipping.ShippingOrder;
+import com.vladmirk.transkontservice.shipping.ShippingOrderRepository;
+import com.vladmirk.transkontservice.shipping.ShippingRelease;
+import com.vladmirk.transkontservice.shipping.ShippingReleaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
 public class InitApplication {
 
+  private ExpeditorRepository expeditorRepository;
+  private ShippingOrderRepository shippingOrderRepository;
+  private ShippingReleaseRepository shippingReleaseRepository;
   @Bean
   @Profile("dev")
-  CommandLineRunner setUp(final ExpeditorRepository expeditorRepository) {
+  @Autowired
+  CommandLineRunner setUp(final ExpeditorRepository expeditorRepository, final ShippingOrderRepository shippingOrderRepository,
+      final ShippingReleaseRepository shippingReleaseRepository) {
+    this.expeditorRepository = expeditorRepository;
+    this.shippingOrderRepository = shippingOrderRepository;
+    this.shippingReleaseRepository = shippingReleaseRepository;
     Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Init the app");
 
     return (args) -> {
       System.out.println("Dev profile");
-      createExpeditor(expeditorRepository);
+      Expeditor expeditor = createExpeditor();
+      createShippingOrders(expeditor);
     };
   }
-  private void createExpeditor(ExpeditorRepository expeditorRepository) {
+  private void createShippingOrders(Expeditor expeditor) {
+    ShippingOrder o = new ShippingOrder();
+    o.setOrderDate(new Date());
+    o.setOrderNumber("11112");
+    o.setExpeditor(expeditor);
+    shippingOrderRepository.save(o);
+
+    ShippingRelease sr = new ShippingRelease();
+    sr.setLoad("Автотерминал АО \"Газпромнефть МЗСМ\"");
+    sr.setUnload("150030, Ярославская обл., г.Ярославль, ул.Пожарского, 66");
+    sr.setUnloadCity("Ярославль");
+    sr.setDestination("ГП Волга-Консалтинг фасовка");
+    try {
+      sr.setAppointmentLoadDate(new SimpleDateFormat("dd.MM.yy").parse("28.01.19"));
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    sr.setCalulatedCost(new BigDecimal(19728.82));
+    sr.setOrder(o);
+    shippingReleaseRepository.save(sr);
+
+
+    ShippingOrder o2 = new ShippingOrder();
+    o2.setOrderDate(new Date());
+    o2.setOrderNumber("2222222");
+    o2.setExpeditor(expeditor);
+    shippingOrderRepository.save(o2);
+
+  }
+  private Expeditor createExpeditor() {
     assert expeditorRepository != null;
 
-    expeditorRepository.save(new Expeditor("00-00006612", "ООО \"ТКС\""));
+    return expeditorRepository.save(new Expeditor("00-00006612", "ООО \"ТКС\""));
 
   }
 

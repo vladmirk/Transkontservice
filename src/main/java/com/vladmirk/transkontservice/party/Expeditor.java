@@ -1,7 +1,5 @@
 package com.vladmirk.transkontservice.party;
 
-import com.vladmirk.transkontservice.shipping.Common;
-
 import javax.persistence.Entity;
 
 @Entity

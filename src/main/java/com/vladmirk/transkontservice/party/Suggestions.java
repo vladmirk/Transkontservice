@@ -1,4 +1,4 @@
-package com.vladmirk.transkontservice.shipping;
+package com.vladmirk.transkontservice.party;
 
 import java.util.ArrayList;
 import java.util.List;
