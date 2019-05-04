@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="fragments/header :: header-css" />
+    <title th:text="${sr.order.orderNumber}">Edit Order</title>
+  </head>
+  <body>
+
+    <div class="container">
+      <div th:replace="fragments/header :: topnavbar" />
+      <div class="container">
+
+        <h3 th:text="${sr.order.orderNumber}">Edit Order</h3>
+
+      </div> <!-- end of container -->
+    </div> <!-- main container -->
+    <div th:replace="fragments/footer :: footer" />
+  </body>
+</html>

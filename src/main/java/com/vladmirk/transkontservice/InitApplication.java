@@ -6,6 +6,7 @@ import com.vladmirk.transkontservice.shipping.ShippingOrder;
 import com.vladmirk.transkontservice.shipping.ShippingOrderRepository;
 import com.vladmirk.transkontservice.shipping.ShippingRelease;
 import com.vladmirk.transkontservice.shipping.ShippingReleaseRepository;
+import com.vladmirk.transkontservice.shipping.ShippingReleaseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +61,7 @@ public class InitApplication {
     }
     sr.setCalulatedCost(new BigDecimal(19728.82));
     sr.setOrder(o);
+    sr.setStatus(ShippingReleaseStatus.DRAFT);
     shippingReleaseRepository.save(sr);
 
 
@@ -68,6 +70,22 @@ public class InitApplication {
     o2.setOrderNumber("2222222");
     o2.setExpeditor(expeditor);
     shippingOrderRepository.save(o2);
+
+    ShippingRelease sr1 = new ShippingRelease();
+    sr1.setLoad("Автотерминал склада ООО \"ОК Логистика\" (г. Нижний Новгород)");
+    sr1.setUnload("610035, г.Киров, ул. Техническая, д. 15");
+    sr1.setUnloadCity("Киров");
+    sr1.setDestination("ООО \"МЕГА-ОЙЛ Киров\"\t");
+    try {
+      sr1.setAppointmentLoadDate(new SimpleDateFormat("dd.MM.yy").parse("28.01.19"));
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    sr1.setCalulatedCost(new BigDecimal(51864.41));
+    sr1.setStatus(ShippingReleaseStatus.DRAFT);
+    sr1.setOrder(o2);
+    shippingReleaseRepository.save(sr1);
+
 
   }
   private Expeditor createExpeditor() {

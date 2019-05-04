@@ -3,6 +3,8 @@ package com.vladmirk.transkontservice.shipping;
 import com.vladmirk.transkontservice.party.Common;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,6 +16,8 @@ public class ShippingRelease extends Common {
   private BigDecimal calulatedCost;
   @ManyToOne
   private ShippingOrder order;
+  @Enumerated(EnumType.STRING)
+  private ShippingReleaseStatus status;
 
   public ShippingRelease() {
   }
@@ -59,5 +63,11 @@ public class ShippingRelease extends Common {
   }
   public void setOrder(ShippingOrder order) {
     this.order = order;
+  }
+  public ShippingReleaseStatus getStatus() {
+    return status;
+  }
+  public void setStatus(ShippingReleaseStatus status) {
+    this.status = status;
   }
 }
