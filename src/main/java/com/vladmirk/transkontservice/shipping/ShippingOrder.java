@@ -2,15 +2,20 @@ package com.vladmirk.transkontservice.shipping;
 
 import com.vladmirk.transkontservice.party.Common;
 import com.vladmirk.transkontservice.party.Expeditor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
 public class ShippingOrder extends Common {
 
   private String orderNumber;
+  @DateTimeFormat(pattern = "dd.MM.yyyy")
+  @Temporal(TemporalType.DATE)
   private Date orderDate;
   @ManyToOne
   private Expeditor expeditor;

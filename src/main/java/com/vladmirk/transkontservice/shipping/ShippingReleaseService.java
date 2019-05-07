@@ -23,4 +23,8 @@ public class ShippingReleaseService {
     return shippingReleaseRepository.findById(id);
   }
 
+  public ShippingRelease save(ShippingRelease sr) {
+    return shippingReleaseRepository.save(sr);
+  }
+
 }

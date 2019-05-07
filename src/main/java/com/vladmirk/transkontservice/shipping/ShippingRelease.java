@@ -1,19 +1,24 @@
 package com.vladmirk.transkontservice.shipping;
 
 import com.vladmirk.transkontservice.party.Common;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 public class ShippingRelease extends Common {
   private String load, unload, unloadCity, destination;
+  @DateTimeFormat(pattern = "dd.MM.yyyy")
+  @Temporal(TemporalType.DATE)
   private Date appointmentLoadDate;
-  private BigDecimal calulatedCost;
+  private BigDecimal calculatedCost;
   @ManyToOne
   private ShippingOrder order;
   @Enumerated(EnumType.STRING)
@@ -52,11 +57,11 @@ public class ShippingRelease extends Common {
   public void setAppointmentLoadDate(Date appointmentLoadDate) {
     this.appointmentLoadDate = appointmentLoadDate;
   }
-  public BigDecimal getCalulatedCost() {
-    return calulatedCost;
+  public BigDecimal getCalculatedCost() {
+    return calculatedCost;
   }
-  public void setCalulatedCost(BigDecimal calulatedCost) {
-    this.calulatedCost = calulatedCost;
+  public void setCalculatedCost(BigDecimal calculatedCost) {
+    this.calculatedCost = calculatedCost;
   }
   public ShippingOrder getOrder() {
     return order;

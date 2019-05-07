@@ -59,7 +59,7 @@ public class InitApplication {
     } catch (ParseException e) {
       e.printStackTrace();
     }
-    sr.setCalulatedCost(new BigDecimal(19728.82));
+    sr.setCalculatedCost(new BigDecimal(19728.82));
     sr.setOrder(o);
     sr.setStatus(ShippingReleaseStatus.DRAFT);
     shippingReleaseRepository.save(sr);
@@ -81,7 +81,7 @@ public class InitApplication {
     } catch (ParseException e) {
       e.printStackTrace();
     }
-    sr1.setCalulatedCost(new BigDecimal(51864.41));
+    sr1.setCalculatedCost(new BigDecimal(51864.41));
     sr1.setStatus(ShippingReleaseStatus.DRAFT);
     sr1.setOrder(o2);
     shippingReleaseRepository.save(sr1);
