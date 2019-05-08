@@ -9,10 +9,6 @@ public class OrderForm implements Serializable {
     this.sR = sr;
   }
 
-  public ShippingOrder getOrder() {
-    return sR.getOrder();
-  }
-
   public ShippingRelease getSR() {
     return sR;
   }
