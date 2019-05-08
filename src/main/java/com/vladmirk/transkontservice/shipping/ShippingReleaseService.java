@@ -9,10 +9,12 @@ import java.util.Optional;
 @Service
 public class ShippingReleaseService {
   private ShippingReleaseRepository shippingReleaseRepository;
+  private ShippingOrderRepository orderRepository;
 
   @Autowired
-  public ShippingReleaseService(final ShippingReleaseRepository shippingReleaseRepository) {
+  public ShippingReleaseService(final ShippingReleaseRepository shippingReleaseRepository, final ShippingOrderRepository orderRepository) {
     this.shippingReleaseRepository = shippingReleaseRepository;
+    this.orderRepository = orderRepository;
   }
 
   public List<ShippingRelease> findShippingReleases() {
@@ -26,5 +28,15 @@ public class ShippingReleaseService {
   public ShippingRelease save(ShippingRelease sr) {
     return shippingReleaseRepository.save(sr);
   }
+
+
+  public Optional<ShippingOrder> findOrderById(Long id) {
+    return orderRepository.findById(id);
+  }
+
+  public ShippingOrder saveOrder(ShippingOrder order) {
+    return orderRepository.save(order);
+  }
+
 
 }
