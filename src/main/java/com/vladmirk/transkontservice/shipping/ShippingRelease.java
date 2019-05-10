@@ -9,17 +9,20 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 public class ShippingRelease extends Common {
-  private String load, unload, unloadCity, destination;
+  private String load;
+  private String unload, unloadCity, destination;
   @DateTimeFormat(pattern = "dd.MM.yyyy")
   @Temporal(TemporalType.DATE)
   private Date appointmentLoadDate;
   private BigDecimal calculatedCost;
   @ManyToOne
+  @Valid
   private ShippingOrder order;
   @Enumerated(EnumType.STRING)
   private ShippingReleaseStatus status;
