@@ -15,27 +15,29 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.vladmirk.transkontservice.party.PartyType.LOADER;
+import static com.vladmirk.transkontservice.party.PartyType.LOAD;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class PartyService {
   private ExpeditorRepository expeditorRepository;
-  private LoaderRepository loaderRepository;
+  private LoadRepository loadRepository;
+  private UnloadRepository unloadRepository;
   private static Map<PartyType, List<SimpleParty>> partyCache = Collections
       .synchronizedMap(new EnumMap<PartyType, List<SimpleParty>>(PartyType.class));
 
   @Autowired
-  public PartyService(ExpeditorRepository expeditorRepository, LoaderRepository loaderRepository) {
+  public PartyService(ExpeditorRepository expeditorRepository, LoadRepository loadRepository, UnloadRepository unloadRepository) {
     this.expeditorRepository = expeditorRepository;
-    this.loaderRepository = loaderRepository;
+    this.loadRepository = loadRepository;
+    this.unloadRepository = unloadRepository;
   }
 
   @PostConstruct
   public void init() {
     Arrays.stream(PartyType.values()).forEach((p) -> partyCache.put(p, new ArrayList<>()));
 
-    loaderRepository.findAll().forEach(partyCache.get(LOADER)::add);
+    loadRepository.findAll().forEach(partyCache.get(LOAD)::add);
   }
 
   public List<Expeditor> findExpeditors(String exp) {
@@ -72,28 +74,46 @@ public class PartyService {
     return expeditorRepository.save(new Expeditor(code, name));
   }
 
-  public Loader saveLoader(Loader loader) {
-    Loader l = loaderRepository.save(loader);
-    updatePartyCache(PartyType.LOADER, l);
+  public Load saveLoader(Load load) {
+    Load l = loadRepository.save(load);
+    updatePartyCache(PartyType.LOAD, l);
     return l;
   }
-  private void updatePartyCache(PartyType type, Loader loader) {
-    int i = partyCache.get(type).indexOf(loader);
-    if (i > -1) {
-      partyCache.get(type).set(i, loader);
-    } else
-      partyCache.get(type).add(loader);
+
+  public Unload saveUnloader(Unload unload) {
+    Unload u = unloadRepository.save(unload);
+    updatePartyCache(PartyType.UNLOAD, u);
+    return u;
   }
 
-  public Loader saveOrCreateNew(Loader loader) {
-    if (loader.getId() != null && !isEmpty(loader.getName())) {
-      Optional<Loader> l = loaderRepository.findById(loader.getId());
-      if (l.isPresent() && l.get().getName().equalsIgnoreCase(loader.getName())) {
-        l.get().setName(loader.getName());
+  private void updatePartyCache(PartyType type, SimpleParty party) {
+    int i = partyCache.get(type).indexOf(party);
+    if (i > -1) {
+      partyCache.get(type).set(i, party);
+    } else
+      partyCache.get(type).add(party);
+  }
+
+  public Load saveOrCreateNew(Load load) {
+    if (load.getId() != null && !isEmpty(load.getName())) {
+      Optional<Load> l = loadRepository.findById(load.getId());
+      if (l.isPresent() && l.get().getName().equalsIgnoreCase(load.getName())) {
+        l.get().setName(load.getName());
         return saveLoader(l.get());
       }
     }
-    return saveLoader(new Loader(loader.getName()));
+    return saveLoader(new Load(load.getName()));
+  }
+
+  public Unload saveOrCreateNew(Unload unload) {
+    if (unload.getId() != null && !isEmpty(unload.getName())) {
+      Optional<Unload> u = unloadRepository.findById(unload.getId());
+      if (u.isPresent() && u.get().getName().equalsIgnoreCase(unload.getName())) {
+        u.get().setName(unload.getName());
+        return saveUnloader(u.get());
+      }
+    }
+    return saveUnloader(new Unload(unload.getName()));
   }
 
   public List<SimpleParty> findParty(PartyType type, String name) {

@@ -1,7 +1,7 @@
 package com.vladmirk.transkontservice.shipping;
 
 import com.vladmirk.transkontservice.party.Expeditor;
-import com.vladmirk.transkontservice.party.Loader;
+import com.vladmirk.transkontservice.party.Load;
 import com.vladmirk.transkontservice.party.PartyService;
 import com.vladmirk.transkontservice.party.PartyType;
 import com.vladmirk.transkontservice.party.SimpleParty;
@@ -67,15 +67,15 @@ public class ShippingController {
     ShippingRelease from = of.getSR();
     ShippingOrder o = updateOrder(from.getOrder());
     sr.setOrder(o);
-    sr.setLoader(updateLoader(of.getSR().getLoader()));
+    sr.setLoad(updateLoader(of.getSR().getLoad()));
 
     sr.setAppointmentLoadDate(from.getAppointmentLoadDate());
     sr = shippingReleaseService.save(sr);
     return sr;
   }
 
-  private Loader updateLoader(Loader loader) {
-    return partyService.saveOrCreateNew(loader);
+  private Load updateLoader(Load load) {
+    return partyService.saveOrCreateNew(load);
   }
 
   private ShippingOrder updateOrder(ShippingOrder from) {
@@ -119,7 +119,7 @@ public class ShippingController {
   public Suggestions getLoads(@RequestParam(name = "query", defaultValue = "", required = false) String load) {
     Suggestions suggestions = new Suggestions();
     if (load.length() > 1) {
-      for (SimpleParty p : partyService.findParty(PartyType.LOADER, load)) {
+      for (SimpleParty p : partyService.findParty(PartyType.LOAD, load)) {
         suggestions.add(String.valueOf(p.getId()), p.getName());
       }
     } else {

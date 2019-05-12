@@ -2,9 +2,11 @@ package com.vladmirk.transkontservice;
 
 import com.vladmirk.transkontservice.party.Expeditor;
 import com.vladmirk.transkontservice.party.ExpeditorRepository;
-import com.vladmirk.transkontservice.party.Loader;
-import com.vladmirk.transkontservice.party.LoaderRepository;
+import com.vladmirk.transkontservice.party.Load;
+import com.vladmirk.transkontservice.party.LoadRepository;
 import com.vladmirk.transkontservice.party.PartyService;
+import com.vladmirk.transkontservice.party.Unload;
+import com.vladmirk.transkontservice.party.UnloadRepository;
 import com.vladmirk.transkontservice.shipping.ShippingOrder;
 import com.vladmirk.transkontservice.shipping.ShippingOrderRepository;
 import com.vladmirk.transkontservice.shipping.ShippingRelease;
@@ -31,38 +33,50 @@ public class InitApplication {
   private ExpeditorRepository expeditorRepository;
   private ShippingOrderRepository shippingOrderRepository;
   private ShippingReleaseRepository shippingReleaseRepository;
-  private LoaderRepository loaderRepository;
+  private LoadRepository loadRepository;
   private PartyService partyService;
+  private UnloadRepository unloadRepository;
   @Bean
   @Profile("dev")
   @Autowired
   CommandLineRunner setUp(final ExpeditorRepository expeditorRepository, final ShippingOrderRepository shippingOrderRepository,
-      final ShippingReleaseRepository shippingReleaseRepository, final LoaderRepository loaderRepository, PartyService partyService) {
+      final ShippingReleaseRepository shippingReleaseRepository, final LoadRepository loadRepository, PartyService partyService,
+      final UnloadRepository unloadRepository) {
     this.expeditorRepository = expeditorRepository;
     this.shippingOrderRepository = shippingOrderRepository;
     this.shippingReleaseRepository = shippingReleaseRepository;
-    this.loaderRepository = loaderRepository;
+    this.loadRepository = loadRepository;
     this.partyService = partyService;
+    this.unloadRepository = unloadRepository;
     Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Init the app");
 
     return (args) -> {
       System.out.println("Dev profile");
       Expeditor expeditor = createExpeditor();
-      List<Loader> loaders = createLoaders();
-      createShippingOrders(expeditor, loaders);
+      List<Load> loads = createLoaders();
+      List<Unload> unloads = createUnloaders();
+      createShippingOrders(expeditor, loads, unloads);
       partyService.init();
     };
   }
+  private List<Unload> createUnloaders() {
+    Unload u1 = new Unload("150030, Ярославская обл., г.Ярославль, ул.Пожарского, 66");
+    partyService.saveUnloader(u1);
 
-  private List<Loader> createLoaders() {
-    Loader l1 = new Loader("Автотерминал АО \"Газпромнефть МЗСМ\"");
-    l1 = loaderRepository.save(l1);
-    Loader l2 = new Loader("Автотерминал склада ООО \"ОК Логистика\" (г. Нижний Новгород)");
-    l2 = loaderRepository.save(l2);
+    Unload u2 = new Unload("610035, г.Киров, ул. Техническая, д. 15");
+    partyService.saveUnloader(u2);
+    return (Arrays.asList(u1, u2));
+  }
+
+  private List<Load> createLoaders() {
+    Load l1 = new Load("Автотерминал АО \"Газпромнефть МЗСМ\"");
+    l1 = loadRepository.save(l1);
+    Load l2 = new Load("Автотерминал склада ООО \"ОК Логистика\" (г. Нижний Новгород)");
+    l2 = loadRepository.save(l2);
     return Arrays.asList(l1, l2);
   }
 
-  private void createShippingOrders(Expeditor expeditor, List<Loader> loaders) {
+  private void createShippingOrders(Expeditor expeditor, List<Load> loads, List<Unload> unloads) {
     ShippingOrder o = new ShippingOrder();
     o.setOrderDate(new Date());
     o.setOrderNumber("11112");
@@ -70,8 +84,8 @@ public class InitApplication {
     shippingOrderRepository.save(o);
 
     ShippingRelease sr = new ShippingRelease();
-    sr.setLoader(loaders.get(0));
-    sr.setUnload("150030, Ярославская обл., г.Ярославль, ул.Пожарского, 66");
+    sr.setLoad(loads.get(0));
+    sr.setUnload(unloads.get(0));
     sr.setUnloadCity("Ярославль");
     sr.setDestination("ГП Волга-Консалтинг фасовка");
     try {
@@ -92,8 +106,8 @@ public class InitApplication {
     shippingOrderRepository.save(o2);
 
     ShippingRelease sr1 = new ShippingRelease();
-    sr1.setLoader(loaders.get(1));
-    sr1.setUnload("610035, г.Киров, ул. Техническая, д. 15");
+    sr1.setLoad(loads.get(1));
+    sr1.setUnload(unloads.get(1));
     sr1.setUnloadCity("Киров");
     sr1.setDestination("ООО \"МЕГА-ОЙЛ Киров\"\t");
     try {

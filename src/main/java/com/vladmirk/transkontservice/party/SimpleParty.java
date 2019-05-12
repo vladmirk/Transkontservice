@@ -7,6 +7,13 @@ import java.util.Objects;
 public class SimpleParty extends Common implements Party {
   private String name;
 
+  public SimpleParty() {
+  }
+
+  public SimpleParty(String name) {
+    this.name = name;
+  }
+
   @Override
   public String getName() {
     return name;
@@ -29,5 +36,10 @@ public class SimpleParty extends Common implements Party {
   public int hashCode() {
 
     return Objects.hash(getName());
+  }
+
+  @Override
+  public String toString() {
+    return getName();
   }
 }
