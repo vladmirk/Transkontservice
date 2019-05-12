@@ -2,11 +2,9 @@ package com.vladmirk.transkontservice;
 
 import com.vladmirk.transkontservice.party.Expeditor;
 import com.vladmirk.transkontservice.party.ExpeditorRepository;
-import com.vladmirk.transkontservice.party.Load;
-import com.vladmirk.transkontservice.party.LoadRepository;
+import com.vladmirk.transkontservice.party.PartyName;
 import com.vladmirk.transkontservice.party.PartyService;
-import com.vladmirk.transkontservice.party.Unload;
-import com.vladmirk.transkontservice.party.UnloadRepository;
+import com.vladmirk.transkontservice.party.PartyType;
 import com.vladmirk.transkontservice.shipping.ShippingOrder;
 import com.vladmirk.transkontservice.shipping.ShippingOrderRepository;
 import com.vladmirk.transkontservice.shipping.ShippingRelease;
@@ -21,11 +19,12 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.vladmirk.transkontservice.party.PartyType.LOAD;
+import static com.vladmirk.transkontservice.party.PartyType.UNLOAD;
 
 @Service
 public class InitApplication {
@@ -33,50 +32,38 @@ public class InitApplication {
   private ExpeditorRepository expeditorRepository;
   private ShippingOrderRepository shippingOrderRepository;
   private ShippingReleaseRepository shippingReleaseRepository;
-  private LoadRepository loadRepository;
   private PartyService partyService;
-  private UnloadRepository unloadRepository;
   @Bean
   @Profile("dev")
   @Autowired
   CommandLineRunner setUp(final ExpeditorRepository expeditorRepository, final ShippingOrderRepository shippingOrderRepository,
-      final ShippingReleaseRepository shippingReleaseRepository, final LoadRepository loadRepository, PartyService partyService,
-      final UnloadRepository unloadRepository) {
+      final ShippingReleaseRepository shippingReleaseRepository, PartyService partyService) {
     this.expeditorRepository = expeditorRepository;
     this.shippingOrderRepository = shippingOrderRepository;
     this.shippingReleaseRepository = shippingReleaseRepository;
-    this.loadRepository = loadRepository;
     this.partyService = partyService;
-    this.unloadRepository = unloadRepository;
     Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Init the app");
 
     return (args) -> {
       System.out.println("Dev profile");
       Expeditor expeditor = createExpeditor();
-      List<Load> loads = createLoaders();
-      List<Unload> unloads = createUnloaders();
-      createShippingOrders(expeditor, loads, unloads);
+      createLoaders();
+      createUnloaders();
+      createShippingOrders(expeditor);
       partyService.init();
     };
   }
-  private List<Unload> createUnloaders() {
-    Unload u1 = new Unload("150030, Ярославская обл., г.Ярославль, ул.Пожарского, 66");
-    partyService.saveUnloader(u1);
-
-    Unload u2 = new Unload("610035, г.Киров, ул. Техническая, д. 15");
-    partyService.saveUnloader(u2);
-    return (Arrays.asList(u1, u2));
+  private void createUnloaders() {
+    partyService.savePartyName(new PartyName(PartyType.UNLOAD, "150030, Ярославская обл., г.Ярославль, ул.Пожарского, 66"));
+    partyService.savePartyName(new PartyName(PartyType.UNLOAD, "610035, г.Киров, ул. Техническая, д. 15"));
   }
 
-  private List<Load> createLoaders() {
-    Load l1 = new Load("Автотерминал АО \"Газпромнефть МЗСМ\"");
-    l1 = loadRepository.save(l1);
-    Load l2 = new Load("Автотерминал склада ООО \"ОК Логистика\" (г. Нижний Новгород)");
-    l2 = loadRepository.save(l2);
-    return Arrays.asList(l1, l2);
+  private void createLoaders() {
+    partyService.savePartyName(new PartyName(LOAD, "Автотерминал АО \"Газпромнефть МЗСМ\""));
+    partyService.savePartyName(new PartyName(LOAD, "Автотерминал склада ООО \"ОК Логистика\" (г. Нижний Новгород)"));
   }
 
-  private void createShippingOrders(Expeditor expeditor, List<Load> loads, List<Unload> unloads) {
+  private void createShippingOrders(Expeditor expeditor) {
     ShippingOrder o = new ShippingOrder();
     o.setOrderDate(new Date());
     o.setOrderNumber("11112");
@@ -84,8 +71,8 @@ public class InitApplication {
     shippingOrderRepository.save(o);
 
     ShippingRelease sr = new ShippingRelease();
-    sr.setLoad(loads.get(0));
-    sr.setUnload(unloads.get(0));
+    sr.setLoad(partyService.getPartyNames(LOAD).get(0));
+    sr.setUnload(partyService.getPartyNames(UNLOAD).get(0));
     sr.setUnloadCity("Ярославль");
     sr.setDestination("ГП Волга-Консалтинг фасовка");
     try {
@@ -106,8 +93,8 @@ public class InitApplication {
     shippingOrderRepository.save(o2);
 
     ShippingRelease sr1 = new ShippingRelease();
-    sr1.setLoad(loads.get(1));
-    sr1.setUnload(unloads.get(1));
+    sr1.setLoad(partyService.getPartyNames(LOAD).get(1));
+    sr1.setUnload(partyService.getPartyNames(UNLOAD).get(1));
     sr1.setUnloadCity("Киров");
     sr1.setDestination("ООО \"МЕГА-ОЙЛ Киров\"\t");
     try {

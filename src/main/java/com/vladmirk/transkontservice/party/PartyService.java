@@ -13,31 +13,33 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import static com.vladmirk.transkontservice.party.PartyType.LOAD;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class PartyService {
   private ExpeditorRepository expeditorRepository;
-  private LoadRepository loadRepository;
-  private UnloadRepository unloadRepository;
-  private static Map<PartyType, List<SimpleParty>> partyCache = Collections
-      .synchronizedMap(new EnumMap<PartyType, List<SimpleParty>>(PartyType.class));
+  private PartyNameRepository partyNameRepository;
+  private static Map<PartyType, List<PartyName>> partyCache = Collections.synchronizedMap(new EnumMap<PartyType, List<PartyName>>(PartyType.class));
 
   @Autowired
-  public PartyService(ExpeditorRepository expeditorRepository, LoadRepository loadRepository, UnloadRepository unloadRepository) {
+  public PartyService(ExpeditorRepository expeditorRepository, PartyNameRepository partyNameRepository) {
     this.expeditorRepository = expeditorRepository;
-    this.loadRepository = loadRepository;
-    this.unloadRepository = unloadRepository;
+    this.partyNameRepository = partyNameRepository;
   }
 
   @PostConstruct
   public void init() {
     Arrays.stream(PartyType.values()).forEach((p) -> partyCache.put(p, new ArrayList<>()));
 
-    loadRepository.findAll().forEach(partyCache.get(LOAD)::add);
+    Map<PartyType, List<PartyName>> collect = StreamSupport.stream(partyNameRepository.findAll().spliterator(), false)
+        .collect(Collectors.groupingBy(PartyName::getType, Collectors.mapping(Function.identity(), Collectors.toList())));
+
+    partyCache.putAll(collect);
+
   }
 
   public List<Expeditor> findExpeditors(String exp) {
@@ -74,51 +76,41 @@ public class PartyService {
     return expeditorRepository.save(new Expeditor(code, name));
   }
 
-  public Load saveLoader(Load load) {
-    Load l = loadRepository.save(load);
-    updatePartyCache(PartyType.LOAD, l);
-    return l;
+  public PartyName savePartyName(PartyName partyName) {
+    PartyName save = partyNameRepository.save(partyName);
+    updatePartyCache(partyName);
+    return save;
   }
 
-  public Unload saveUnloader(Unload unload) {
-    Unload u = unloadRepository.save(unload);
-    updatePartyCache(PartyType.UNLOAD, u);
-    return u;
-  }
 
-  private void updatePartyCache(PartyType type, SimpleParty party) {
-    int i = partyCache.get(type).indexOf(party);
+  private void updatePartyCache(PartyName party) {
+    int i = partyCache.get(party.getType()).indexOf(party);
     if (i > -1) {
-      partyCache.get(type).set(i, party);
+      partyCache.get(party.getType()).set(i, party);
     } else
-      partyCache.get(type).add(party);
+      partyCache.get(party.getType()).add(party);
   }
 
-  public Load saveOrCreateNew(Load load) {
-    if (load.getId() != null && !isEmpty(load.getName())) {
-      Optional<Load> l = loadRepository.findById(load.getId());
-      if (l.isPresent() && l.get().getName().equalsIgnoreCase(load.getName())) {
-        l.get().setName(load.getName());
-        return saveLoader(l.get());
+  public PartyName savePartyNameOrCreateNew(PartyType type, PartyName partyName) {
+    if (partyName.getId() != null && !isEmpty(partyName.getName())) {
+      Optional<PartyName> pn = partyNameRepository.findById(partyName.getId());
+      if (pn.isPresent() && pn.get().getName().equalsIgnoreCase(partyName.getName())) {
+        pn.get().setName(partyName.getName());
+        return savePartyName(pn.get());
       }
     }
-    return saveLoader(new Load(load.getName()));
+    return savePartyName(new PartyName(type, partyName.getName()));
   }
 
-  public Unload saveOrCreateNew(Unload unload) {
-    if (unload.getId() != null && !isEmpty(unload.getName())) {
-      Optional<Unload> u = unloadRepository.findById(unload.getId());
-      if (u.isPresent() && u.get().getName().equalsIgnoreCase(unload.getName())) {
-        u.get().setName(unload.getName());
-        return saveUnloader(u.get());
-      }
-    }
-    return saveUnloader(new Unload(unload.getName()));
+
+  public List<PartyName> getPartyNames(PartyType type) {
+    return partyCache.get(type);
   }
 
-  public List<SimpleParty> findParty(PartyType type, String name) {
-    List<? extends SimpleParty> simpleParties = partyCache.get(type);
-    return simpleParties.stream().filter(p -> p.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
+  public List<PartyName> findPartyName(PartyType type, String name) {
+    List<PartyName> parties = getPartyNames(type);
+    return parties.stream().filter(p -> p.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
   }
+
 
 }

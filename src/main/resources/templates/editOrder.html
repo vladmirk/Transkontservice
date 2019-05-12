@@ -67,18 +67,18 @@
           </div>
           <!-- Load -->
           <div class="form-group row">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.loader')}"
-                 th:errors="*{sR.loader}"></div>
-            <label th:for="loader" class="col-sm-2 col-form-label" th:text="#{editOrders.loader}">Load</label>
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.load')}"
+                 th:errors="*{sR.load}"></div>
+            <label th:for="srLoad" class="col-sm-2 col-form-label" th:text="#{editOrders.load}">Load</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" th:id="srLoad" th:field="*{sR.loader.name}" />
-              <input type="hidden" class="form-control" th:id="srLoadId" th:field="*{sR.loader.id}" />
+              <input type="text" class="form-control" th:id="srLoad" th:field="*{sR.load.name}" />
+              <input type="hidden" class="form-control" th:id="srLoadId" th:field="*{sR.load.id}" />
             </div>
 
             <script>
               $(document).ready(function () {
                 $('#srLoad').autocomplete({
-                  serviceUrl: '/suggest/loader',
+                  serviceUrl: '/suggest/load',
                   onSelect: function (suggestion) {
                     $('#srLoadId').val(suggestion.data);
                     // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);

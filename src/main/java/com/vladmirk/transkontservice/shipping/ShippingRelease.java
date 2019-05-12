@@ -1,8 +1,7 @@
 package com.vladmirk.transkontservice.shipping;
 
 import com.vladmirk.transkontservice.party.Common;
-import com.vladmirk.transkontservice.party.Load;
-import com.vladmirk.transkontservice.party.Unload;
+import com.vladmirk.transkontservice.party.PartyName;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -18,9 +17,9 @@ import java.util.Date;
 @Entity
 public class ShippingRelease extends Common {
   @ManyToOne
-  private Load load;
+  private PartyName load;
   @ManyToOne
-  private Unload unload;
+  private PartyName unload;
   private String unloadCity, destination;
   @DateTimeFormat(pattern = "dd.MM.yyyy")
   @Temporal(TemporalType.DATE)
@@ -35,16 +34,16 @@ public class ShippingRelease extends Common {
   public ShippingRelease() {
   }
 
-  public Load getLoad() {
+  public PartyName getLoad() {
     return load;
   }
-  public void setLoad(Load load) {
+  public void setLoad(PartyName load) {
     this.load = load;
   }
-  public Unload getUnload() {
+  public PartyName getUnload() {
     return unload;
   }
-  public void setUnload(Unload unload) {
+  public void setUnload(PartyName unload) {
     this.unload = unload;
   }
   public String getUnloadCity() {
