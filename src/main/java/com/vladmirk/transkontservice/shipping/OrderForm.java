@@ -16,7 +16,6 @@ public class OrderForm implements Serializable {
   public ShippingRelease getSR() {
     return sR;
   }
-
   public void setSR(ShippingRelease sr) {
     this.sR = sr;
   }

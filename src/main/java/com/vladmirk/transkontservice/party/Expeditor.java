@@ -3,17 +3,16 @@ package com.vladmirk.transkontservice.party;
 import javax.persistence.Entity;
 
 @Entity
-public class Expeditor extends Common {
+public class Expeditor extends SimpleParty implements Party {
 
   private String code;
-  private String name;
 
   public Expeditor() {
   }
 
   public Expeditor(String code, String name) {
-    this.code = code;
-    this.name = name;
+    setCode(code);
+    setName(name);
   }
 
   public String getCode() {
@@ -22,10 +21,5 @@ public class Expeditor extends Common {
   public void setCode(String code) {
     this.code = code;
   }
-  public String getName() {
-    return name;
-  }
-  public void setName(String name) {
-    this.name = name;
-  }
+
 }

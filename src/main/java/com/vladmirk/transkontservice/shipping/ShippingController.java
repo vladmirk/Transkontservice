@@ -1,7 +1,10 @@
 package com.vladmirk.transkontservice.shipping;
 
 import com.vladmirk.transkontservice.party.Expeditor;
+import com.vladmirk.transkontservice.party.Loader;
 import com.vladmirk.transkontservice.party.PartyService;
+import com.vladmirk.transkontservice.party.PartyType;
+import com.vladmirk.transkontservice.party.SimpleParty;
 import com.vladmirk.transkontservice.party.Suggestions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,10 +67,15 @@ public class ShippingController {
     ShippingRelease from = of.getSR();
     ShippingOrder o = updateOrder(from.getOrder());
     sr.setOrder(o);
+    sr.setLoader(updateLoader(of.getSR().getLoader()));
 
     sr.setAppointmentLoadDate(from.getAppointmentLoadDate());
     sr = shippingReleaseService.save(sr);
     return sr;
+  }
+
+  private Loader updateLoader(Loader loader) {
+    return partyService.saveOrCreateNew(loader);
   }
 
   private ShippingOrder updateOrder(ShippingOrder from) {
@@ -98,6 +106,21 @@ public class ShippingController {
     if (expeditor.length() > 1) {
       for (Expeditor e : partyService.findExpeditors(expeditor)) {
         suggestions.add(e.getCode(), e.getName());
+      }
+    } else {
+      suggestions.add("default", "default");
+    }
+
+    return suggestions;
+  }
+
+  @GetMapping("/suggest/loader")
+  @ResponseBody
+  public Suggestions getLoads(@RequestParam(name = "query", defaultValue = "", required = false) String load) {
+    Suggestions suggestions = new Suggestions();
+    if (load.length() > 1) {
+      for (SimpleParty p : partyService.findParty(PartyType.LOADER, load)) {
+        suggestions.add(String.valueOf(p.getId()), p.getName());
       }
     } else {
       suggestions.add("default", "default");

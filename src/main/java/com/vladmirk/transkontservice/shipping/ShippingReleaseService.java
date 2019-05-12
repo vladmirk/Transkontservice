@@ -3,13 +3,25 @@ package com.vladmirk.transkontservice.shipping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ShippingReleaseService {
   private ShippingReleaseRepository shippingReleaseRepository;
   private ShippingOrderRepository orderRepository;
+
+  enum Category {
+    LOAD
+  }
+  private static Map<Category, List<String>> hash = new HashMap();
+  static {
+    for (Category c : Category.values()) {
+
+    }
+  }
 
   @Autowired
   public ShippingReleaseService(final ShippingReleaseRepository shippingReleaseRepository, final ShippingOrderRepository orderRepository) {
@@ -29,7 +41,6 @@ public class ShippingReleaseService {
     return shippingReleaseRepository.save(sr);
   }
 
-
   public Optional<ShippingOrder> findOrderById(Long id) {
     return orderRepository.findById(id);
   }
@@ -38,5 +49,9 @@ public class ShippingReleaseService {
     return orderRepository.save(order);
   }
 
+  public List<String> findLoads(String load) {
+    List<String> loads = hash.get(Category.LOAD);
+    return loads;
+  }
 
 }
