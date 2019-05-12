@@ -36,7 +36,7 @@
               });
             </script>
           </div>
-          <!-- -->
+          <!-- Expeditor -->
           <div class="form-group row">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.order.expeditor')}"
                  th:errors="*{order.expeditor}"></div>
@@ -81,7 +81,6 @@
                   serviceUrl: '/suggest/load',
                   onSelect: function (suggestion) {
                     $('#srLoadId').val(suggestion.data);
-                    // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
                   },
                   onSearchStart: function (params) {
                     $('#srLoadId').val('');
@@ -90,7 +89,31 @@
               });
             </script>
           </div>
+          <!-- Unload -->
+          <div class="form-group row">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.unload')}"
+                 th:errors="*{sR.unload}"></div>
+            <label th:for="srUnload" class="col-sm-2 col-form-label" th:text="#{editOrders.unload}">Unload</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" th:id="srUnload" th:field="*{sR.unload.name}" />
+              <input type="hidden" class="form-control" th:id="srUnloadId" th:field="*{sR.unload.id}" />
+            </div>
+            <script>
+              $(document).ready(function () {
+                $('#srUnload').autocomplete({
+                  serviceUrl: '/suggest/unload',
+                  onSelect: function (suggestion) {
+                    $('#srUnloadId').val(suggestion.data);
+                  },
+                  onSearchStart: function (params) {
+                    $('#srUnloadId').val('');
+                  }
+                });
+              });
+            </script>
+          </div>
 
+          <!-- Submit -->
           <div class="form-group row">
             <div class="col-sm-2">
             </div>

@@ -68,6 +68,7 @@ public class ShippingController {
     ShippingOrder o = updateOrder(from.getOrder());
     sr.setOrder(o);
     sr.setLoad(updatePartyName(PartyType.LOAD, of.getSR().getLoad()));
+    sr.setUnload(updatePartyName(PartyType.UNLOAD, of.getSR().getUnload()));
 
     sr.setAppointmentLoadDate(from.getAppointmentLoadDate());
     sr = shippingReleaseService.save(sr);
@@ -129,4 +130,19 @@ public class ShippingController {
 
     return suggestions;
   }
+
+  @GetMapping("/suggest/unload")
+  @ResponseBody
+  public Suggestions getUnloads(@RequestParam(name = "query", defaultValue = "", required = false) String unload) {
+    Suggestions suggestions = new Suggestions();
+    if (unload.length() > 1) {
+      for (SimpleParty p : partyService.findPartyName(PartyType.UNLOAD, unload)) {
+        suggestions.add(String.valueOf(p.getId()), p.getName());
+      }
+    } else {
+      suggestions.add("default", "default");
+    }
+    return suggestions;
+  }
+
 }
