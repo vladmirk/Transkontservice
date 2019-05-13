@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.vladmirk.transkontservice.party.PartyType.CITY;
+import static com.vladmirk.transkontservice.party.PartyType.DESTINATION;
 import static com.vladmirk.transkontservice.party.PartyType.LOAD;
 import static com.vladmirk.transkontservice.party.PartyType.UNLOAD;
 
@@ -47,20 +49,26 @@ public class InitApplication {
     return (args) -> {
       System.out.println("Dev profile");
       Expeditor expeditor = createExpeditor();
-      createLoaders();
-      createUnloaders();
+      createPartyNames();
       createShippingOrders(expeditor);
       partyService.init();
     };
   }
-  private void createUnloaders() {
-    partyService.savePartyName(new PartyName(PartyType.UNLOAD, "150030, Ярославская обл., г.Ярославль, ул.Пожарского, 66"));
-    partyService.savePartyName(new PartyName(PartyType.UNLOAD, "610035, г.Киров, ул. Техническая, д. 15"));
-  }
 
-  private void createLoaders() {
+  private void createPartyNames() {
     partyService.savePartyName(new PartyName(LOAD, "Автотерминал АО \"Газпромнефть МЗСМ\""));
     partyService.savePartyName(new PartyName(LOAD, "Автотерминал склада ООО \"ОК Логистика\" (г. Нижний Новгород)"));
+
+    partyService.savePartyName(new PartyName(PartyType.UNLOAD, "150030, Ярославская обл., г.Ярославль, ул.Пожарского, 66"));
+    partyService.savePartyName(new PartyName(PartyType.UNLOAD, "610035, г.Киров, ул. Техническая, д. 15"));
+
+    partyService.savePartyName(new PartyName(PartyType.CITY, "Ярославль"));
+    partyService.savePartyName(new PartyName(PartyType.CITY, "Киров"));
+
+    partyService.savePartyName(new PartyName(PartyType.DESTINATION, "ГП Волга-Консалтинг фасовка"));
+    partyService.savePartyName(new PartyName(PartyType.DESTINATION, "ООО \"МЕГА-ОЙЛ Киров\""));
+
+
   }
 
   private void createShippingOrders(Expeditor expeditor) {
@@ -73,8 +81,8 @@ public class InitApplication {
     ShippingRelease sr = new ShippingRelease();
     sr.setLoad(partyService.getPartyNames(LOAD).get(0));
     sr.setUnload(partyService.getPartyNames(UNLOAD).get(0));
-    sr.setUnloadCity("Ярославль");
-    sr.setDestination("ГП Волга-Консалтинг фасовка");
+    sr.setUnloadCity(partyService.getPartyNames(CITY).get(0));
+    sr.setDestination(partyService.getPartyNames(DESTINATION).get(0));
     try {
       sr.setAppointmentLoadDate(new SimpleDateFormat("dd.MM.yy").parse("28.01.19"));
     } catch (ParseException e) {
@@ -95,8 +103,8 @@ public class InitApplication {
     ShippingRelease sr1 = new ShippingRelease();
     sr1.setLoad(partyService.getPartyNames(LOAD).get(1));
     sr1.setUnload(partyService.getPartyNames(UNLOAD).get(1));
-    sr1.setUnloadCity("Киров");
-    sr1.setDestination("ООО \"МЕГА-ОЙЛ Киров\"\t");
+    sr1.setUnloadCity(partyService.getPartyNames(CITY).get(1));
+    sr1.setDestination(partyService.getPartyNames(DESTINATION).get(1));
     try {
       sr1.setAppointmentLoadDate(new SimpleDateFormat("dd.MM.yy").parse("28.01.19"));
     } catch (ParseException e) {

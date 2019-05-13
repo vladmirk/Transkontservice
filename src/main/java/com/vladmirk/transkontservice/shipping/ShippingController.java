@@ -69,8 +69,11 @@ public class ShippingController {
     sr.setOrder(o);
     sr.setLoad(updatePartyName(PartyType.LOAD, of.getSR().getLoad()));
     sr.setUnload(updatePartyName(PartyType.UNLOAD, of.getSR().getUnload()));
-
+    sr.setUnloadCity(updatePartyName(PartyType.CITY, of.getSR().getUnloadCity()));
+    sr.setDestination(updatePartyName(PartyType.DESTINATION, of.getSR().getDestination()));
     sr.setAppointmentLoadDate(from.getAppointmentLoadDate());
+    sr.setCalculatedCost(from.getCalculatedCost());
+
     sr = shippingReleaseService.save(sr);
     return sr;
   }
@@ -137,6 +140,30 @@ public class ShippingController {
     Suggestions suggestions = new Suggestions();
     if (unload.length() > 1) {
       for (SimpleParty p : partyService.findPartyName(PartyType.UNLOAD, unload)) {
+        suggestions.add(String.valueOf(p.getId()), p.getName());
+      }
+    } else {
+      suggestions.add("default", "default");
+    }
+    return suggestions;
+  }
+
+  @GetMapping("/suggest/unloadCity")
+  @ResponseBody
+  public Suggestions getUnloadCity(@RequestParam(name = "query", defaultValue = "", required = false) String unloadCity) {
+    Suggestions suggestions = new Suggestions();
+    for (SimpleParty p : partyService.findPartyName(PartyType.CITY, unloadCity)) {
+      suggestions.add(String.valueOf(p.getId()), p.getName());
+    }
+    return suggestions;
+  }
+
+  @GetMapping("/suggest/destination")
+  @ResponseBody
+  public Suggestions getDestination(@RequestParam(name = "query", defaultValue = "", required = false) String dest) {
+    Suggestions suggestions = new Suggestions();
+    if (dest.length() > 1) {
+      for (SimpleParty p : partyService.findPartyName(PartyType.DESTINATION, dest)) {
         suggestions.add(String.valueOf(p.getId()), p.getName());
       }
     } else {

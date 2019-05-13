@@ -20,7 +20,12 @@ public class ShippingRelease extends Common {
   private PartyName load;
   @ManyToOne
   private PartyName unload;
-  private String unloadCity, destination;
+
+  @ManyToOne
+  private PartyName unloadCity;
+  @ManyToOne
+  private PartyName destination;
+
   @DateTimeFormat(pattern = "dd.MM.yyyy")
   @Temporal(TemporalType.DATE)
   private Date appointmentLoadDate;
@@ -46,16 +51,16 @@ public class ShippingRelease extends Common {
   public void setUnload(PartyName unload) {
     this.unload = unload;
   }
-  public String getUnloadCity() {
+  public PartyName getUnloadCity() {
     return unloadCity;
   }
-  public void setUnloadCity(String unloadCity) {
+  public void setUnloadCity(PartyName unloadCity) {
     this.unloadCity = unloadCity;
   }
-  public String getDestination() {
+  public PartyName getDestination() {
     return destination;
   }
-  public void setDestination(String destination) {
+  public void setDestination(PartyName destination) {
     this.destination = destination;
   }
   public Date getAppointmentLoadDate() {

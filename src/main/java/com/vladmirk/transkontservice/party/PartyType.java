@@ -1,5 +1,5 @@
 package com.vladmirk.transkontservice.party;
 
 public enum PartyType {
-  LOAD, UNLOAD
+  LOAD, UNLOAD, CITY, DESTINATION
 }

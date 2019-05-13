@@ -23,10 +23,21 @@
       <script type="text/javascript"
               src="/webjars/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
 
+      <script type="text/javascript" src="/js/jquery.mask.min.js"></script>
       <script language="JavaScript">
         function dateFormat() {
           return '[[#{date.format.js}]]';
         }
+
+        $(document).ready(function () {
+          $('.date_time').mask('00.00.00 00:00');
+          $('.int_value').mask('00');
+          $('.date_time_placeholder').mask("00.00.00 00:00", {placeholder: "__.__.__ __:__"});
+          $('.amount').mask("# ##0.00");
+          // $('.amount').mask('-###');
+
+        })
+
       </script>
 
     </div>
