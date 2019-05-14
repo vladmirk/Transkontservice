@@ -193,7 +193,7 @@
             </div>
           </div>
           <!-- Carrier Info -->
-          <div class="bg-light p-2 m-2">
+          <div class="bg-light  pt-3 pl-2 pr-2 pb-1">
             <input type="hidden" class="form-control" th:field="*{sR.carrierInfo.id}" />
             <!-- Driver -->
             <div class="form-group row">
@@ -247,20 +247,94 @@
                 });
               </script>
             </div>
+            <!-- Cost  -->
+            <div class="form-group row">
+              <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.cost')}"
+                   th:errors="*{sR.carrierInfo.cost}"></div>
+              <label th:for="cost" class="col-sm-2 col-form-label" th:text="#{editOrders.cost}">Cost</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" th:id="cost" th:field="*{sR.carrierInfo.cost}" />
+              </div>
+            </div>
           </div> <!--Carrier Infor -->
+          <!-- Arrival Date -->
+          <div class="form-group row mt-3">
+            <label for="arrivalDate" class="col-sm-2 col-form-label" th:text="#{editOrders.arrivalDate}">arrival Date</label>
+            <div class="col-sm-10">
+              <div class="form-group">
+                <div class="input-group date" id="arrivalDate" data-target-input="nearest">
+                  <input type="text" class="form-control datetimepicker-input" data-target="#arrivalDate" th:field="*{sR.arrivalDate}"
+                         th:errorclass="border-danger" />
+                  <div class=" input-group-append" data-target="#arrivalDate" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script type="text/javascript">
+              $(function () {
+                $('#arrivalDate').datetimepicker({
+                  locale: 'ru', format: 'L',
+                  date: moment("[[${{orderForm.sR.arrivalDate}}]]", dateFormat())
+                });
+              });
+            </script>
+          </div>
+          <!-- Load Date -->
+          <div class="form-group row ">
+            <label for="loadDate" class="col-sm-2 col-form-label" th:text="#{editOrders.loadDate}">load Date</label>
+            <div class="col-sm-10">
+              <div class="form-group">
+                <div class="input-group date" id="loadDate" data-target-input="nearest">
+                  <input type="text" class="form-control datetimepicker-input" data-target="#loadDate" th:field="*{sR.loadDate}"
+                         th:errorclass="border-danger" />
+                  <div class=" input-group-append" data-target="#loadDate" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script type="text/javascript">
+              $(function () {
+                $('#loadDate').datetimepicker({
+                  locale: 'ru', format: 'L',
+                  date: moment("[[${{orderForm.sR.loadDate}}]]", dateFormat())
+                });
+              });
+            </script>
+          </div>
+          <!-- Comment1 -->
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="comment1" th:text="#{editOrders.comment1}">Example textarea</label>
+            <div class="col-sm-10">
+              <div class="form-group">
+                <textarea class="form-control" id="comment1" rows="3" th:field="*{sR.comment1}"> </textarea>
+              </div>
+            </div>
+          </div>
+          <!-- Comment2 -->
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="comment2" th:text="#{editOrders.comment2}">Example textarea</label>
+            <div class="col-sm-10">
+              <div class="form-group">
+                <textarea class="form-control" id="comment2" rows="3" th:field="*{sR.comment2}"> </textarea>
+              </div>
+            </div>
+          </div>
 
           <!-- Submit -->
-          <div class="form-group row">
+          <div class=" form-group row">
             <div class="col-sm-2">
             </div>
             <div class="col-sm-10">
               <button type="submit" class="btn btn-success ">OK</button>
             </div>
           </div>
-
         </form>
       </div> <!-- end of container -->
+      <p>&nbsp;</p>
     </div> <!-- main container -->
+
     <div th:replace="fragments/footer :: footer" />
   </body>
 </html>

@@ -14,8 +14,11 @@ public class Transport extends Common {
   @ManyToOne
   private PartyName truckModel;
   private String truckPlateNumber;
+  @ManyToOne
+  private PartyName truckType;
   private String trailerPlateNumber;
-
+  @ManyToOne
+  private PartyName trailerType;
 
   public Transport() {
   }
@@ -65,5 +68,18 @@ public class Transport extends Common {
   public String toString() {
     String trailer = isEmpty(getTrailer()) ? "" : " - " + getTrailer();
     return getTruck() + trailer;
+  }
+
+  public PartyName getTruckType() {
+    return truckType;
+  }
+  public void setTruckType(PartyName truckType) {
+    this.truckType = truckType;
+  }
+  public PartyName getTrailerType() {
+    return trailerType;
+  }
+  public void setTrailerType(PartyName trailerType) {
+    this.trailerType = trailerType;
   }
 }

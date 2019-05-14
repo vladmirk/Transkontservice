@@ -73,6 +73,10 @@ public class ShippingController {
     sr.setDestination(updatePartyName(PartyType.DESTINATION, of.getSR().getDestination()));
     sr.setAppointmentLoadDate(from.getAppointmentLoadDate());
     sr.setCalculatedCost(from.getCalculatedCost());
+    sr.setArrivalDate(from.getArrivalDate());
+    sr.setLoadDate(from.getLoadDate());
+    sr.setComment1(from.getComment1());
+    sr.setComment2(from.getComment2());
 
     CarrierInfo infor = updateCarrierInfo(of);
     sr.setCarrierInfo(infor);
@@ -98,6 +102,8 @@ public class ShippingController {
       carrierInfo.setTransport(transportById.isPresent() ? transportById.get() : null);
     } else
       carrierInfo.setTransport(null);
+
+    carrierInfo.setCost(of.getSR().getCarrierInfo().getCost());
     return shippingReleaseService.saveCarrierInfo(carrierInfo);
   }
 

@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateFormatter implements Formatter<Date> {
-  SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+  public static final String DATE_FORMAT = "dd.MM.yyyy";
+  private SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
 
   @Override
   public Date parse(String text, Locale locale) throws ParseException {

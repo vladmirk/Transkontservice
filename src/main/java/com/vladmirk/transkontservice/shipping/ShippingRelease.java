@@ -1,5 +1,6 @@
 package com.vladmirk.transkontservice.shipping;
 
+import com.vladmirk.transkontservice.formatter.DateFormatter;
 import com.vladmirk.transkontservice.party.Common;
 import com.vladmirk.transkontservice.party.PartyName;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +27,7 @@ public class ShippingRelease extends Common {
   @ManyToOne
   private PartyName destination;
 
-  @DateTimeFormat(pattern = "dd.MM.yyyy")
+  @DateTimeFormat(pattern = DateFormatter.DATE_FORMAT)
   @Temporal(TemporalType.DATE)
   private Date appointmentLoadDate;
   private BigDecimal calculatedCost;
@@ -38,6 +39,18 @@ public class ShippingRelease extends Common {
 
   @ManyToOne
   private CarrierInfo carrierInfo;
+
+  @DateTimeFormat(pattern = DateFormatter.DATE_FORMAT)
+  @Temporal(TemporalType.DATE)
+  private Date arrivalDate;
+
+
+  @DateTimeFormat(pattern = DateFormatter.DATE_FORMAT)
+  @Temporal(TemporalType.DATE)
+  private Date loadDate;
+
+  private String comment1, comment2;
+
 
   public ShippingRelease() {
   }
@@ -95,5 +108,29 @@ public class ShippingRelease extends Common {
   }
   public void setCarrierInfo(CarrierInfo carrierInfo) {
     this.carrierInfo = carrierInfo;
+  }
+  public Date getArrivalDate() {
+    return arrivalDate;
+  }
+  public void setArrivalDate(Date arrivalDate) {
+    this.arrivalDate = arrivalDate;
+  }
+  public Date getLoadDate() {
+    return loadDate;
+  }
+  public void setLoadDate(Date loadDate) {
+    this.loadDate = loadDate;
+  }
+  public String getComment1() {
+    return comment1;
+  }
+  public void setComment1(String comment1) {
+    this.comment1 = comment1;
+  }
+  public String getComment2() {
+    return comment2;
+  }
+  public void setComment2(String comment2) {
+    this.comment2 = comment2;
   }
 }
