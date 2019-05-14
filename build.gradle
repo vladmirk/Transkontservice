@@ -34,7 +34,7 @@ dependencies {
   compile('org.webjars:bootstrap:4.3.0')
   compile('org.webjars:jquery:3.3.1')
   compile('org.webjars.npm:popper.js:1.14.7')
-  
+
   compile('org.webjars:jQuery-Autocomplete:1.4.9')
 
 //  Date Picker https://tempusdominus.github.io/bootstrap-4/

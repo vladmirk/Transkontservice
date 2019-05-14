@@ -2,6 +2,10 @@ package com.vladmirk.transkontservice.party;
 
 import com.vladmirk.transkontservice.AppRuntimeException;
 import com.vladmirk.transkontservice.Exceptions;
+import com.vladmirk.transkontservice.shipping.DriverInfo;
+import com.vladmirk.transkontservice.shipping.DriverInfoRepository;
+import com.vladmirk.transkontservice.shipping.Transport;
+import com.vladmirk.transkontservice.shipping.TransportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +27,17 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class PartyService {
   private ExpeditorRepository expeditorRepository;
   private PartyNameRepository partyNameRepository;
+  private DriverInfoRepository driverInfoRepository;
+  private TransportRepository transportRepository;
   private static Map<PartyType, List<PartyName>> partyCache = Collections.synchronizedMap(new EnumMap<PartyType, List<PartyName>>(PartyType.class));
 
   @Autowired
-  public PartyService(ExpeditorRepository expeditorRepository, PartyNameRepository partyNameRepository) {
+  public PartyService(ExpeditorRepository expeditorRepository, PartyNameRepository partyNameRepository, DriverInfoRepository driverInfoRepository,
+      TransportRepository transportRepository) {
     this.expeditorRepository = expeditorRepository;
     this.partyNameRepository = partyNameRepository;
+    this.driverInfoRepository = driverInfoRepository;
+    this.transportRepository = transportRepository;
   }
 
   @PostConstruct
@@ -43,9 +52,30 @@ public class PartyService {
   }
 
   public List<Expeditor> findExpeditors(String exp) {
-    String s = '%' + exp + '%';
-    s = s.toUpperCase();
+    String s = getPattern(exp);
     return expeditorRepository.findExpeditorsByCodeContainingOrNameContainingAllIgnoreCase(s, s);
+  }
+  private String getPattern(String exp) {
+    String s = '%' + exp + '%';
+    return s.toUpperCase();
+  }
+
+  public List<DriverInfo> findDriverInfo(String info) {
+    String s = getPattern(info);
+    return driverInfoRepository.findDriverInfoByNameContainingOrSecondNameContainingOrSurnameContainingOrPassportContainingAllIgnoreCase(s, s, s, s);
+  }
+
+  public List<Transport> findTransport(String transport) {
+    String s = getPattern(transport);
+    return transportRepository.findTransportByTruckPlateNumberContainingOrTrailerPlateNumberContainingAllIgnoreCase(s, s);
+  }
+
+  public Optional<Transport> findTransportById(Long id) {
+    return transportRepository.findById(id);
+  }
+
+  public Optional<DriverInfo> findDriverInforById(Long id) {
+    return driverInfoRepository.findById(id);
   }
 
   public Expeditor findExpeditor(String code, String name) {

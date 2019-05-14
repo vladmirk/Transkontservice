@@ -36,6 +36,9 @@ public class ShippingRelease extends Common {
   @Enumerated(EnumType.STRING)
   private ShippingReleaseStatus status;
 
+  @ManyToOne
+  private CarrierInfo carrierInfo;
+
   public ShippingRelease() {
   }
 
@@ -86,5 +89,11 @@ public class ShippingRelease extends Common {
   }
   public void setStatus(ShippingReleaseStatus status) {
     this.status = status;
+  }
+  public CarrierInfo getCarrierInfo() {
+    return carrierInfo;
+  }
+  public void setCarrierInfo(CarrierInfo carrierInfo) {
+    this.carrierInfo = carrierInfo;
   }
 }

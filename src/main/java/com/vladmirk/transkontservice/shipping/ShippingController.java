@@ -74,8 +74,43 @@ public class ShippingController {
     sr.setAppointmentLoadDate(from.getAppointmentLoadDate());
     sr.setCalculatedCost(from.getCalculatedCost());
 
+    CarrierInfo infor = updateCarrierInfo(of);
+    sr.setCarrierInfo(infor);
+
     sr = shippingReleaseService.save(sr);
     return sr;
+  }
+  private CarrierInfo updateCarrierInfo(OrderForm of) {
+    assert of.getSR() != null;
+
+    CarrierInfo carrierInfo = getCarrierInfo(of);
+    // Driver Infor
+    if (!isEmpty(of.getDriverInfoStr()) && of.getSR().getCarrierInfo().getDriverInfo() != null && of.getSR().getCarrierInfo().getDriverInfo()
+        .getId() != null) {
+      Optional<DriverInfo> driver = partyService.findDriverInforById(of.getSR().getCarrierInfo().getDriverInfo().getId());
+      carrierInfo.setDriverInfo(driver.isPresent() ? driver.get() : null);
+    } else
+      carrierInfo.setDriverInfo(null);
+    // Transport
+    if (!isEmpty(of.getTransportStr()) && of.getSR().getCarrierInfo().getTransport() != null && of.getSR().getCarrierInfo().getTransport()
+        .getId() != null) {
+      Optional<Transport> transportById = partyService.findTransportById(of.getSR().getCarrierInfo().getTransport().getId());
+      carrierInfo.setTransport(transportById.isPresent() ? transportById.get() : null);
+    } else
+      carrierInfo.setTransport(null);
+    return shippingReleaseService.saveCarrierInfo(carrierInfo);
+  }
+
+  private CarrierInfo getCarrierInfo(OrderForm of) {
+    if (of.getSR().getCarrierInfo() == null || of.getSR().getCarrierInfo().getId() == null)
+      return shippingReleaseService.createNewCarrierInfo();
+    else {
+      Optional<CarrierInfo> carrierInfoById = shippingReleaseService.findCarrierInfoById(of.getSR().getCarrierInfo().getId());
+      if (carrierInfoById.isPresent())
+        return carrierInfoById.get();
+      else
+        throw new RuntimeException("Cannot find Carrier by id " + of.getSR().getCarrierInfo().getId());
+    }
   }
 
   private PartyName updatePartyName(PartyType type, PartyName partyName) {
@@ -172,4 +207,31 @@ public class ShippingController {
     return suggestions;
   }
 
+  @GetMapping("/suggest/driverInfo")
+  @ResponseBody
+  public Suggestions getDriverInfo(@RequestParam(name = "query", defaultValue = "", required = false) String dInfo) {
+    Suggestions suggestions = new Suggestions();
+    if (dInfo.length() > 1) {
+      for (DriverInfo p : partyService.findDriverInfo(dInfo)) {
+        suggestions.add(String.valueOf(p.getId()), p.toString());
+      }
+    } else {
+      suggestions.add("default", "default");
+    }
+    return suggestions;
+  }
+
+  @GetMapping("/suggest/transport")
+  @ResponseBody
+  public Suggestions getTransport(@RequestParam(name = "query", defaultValue = "", required = false) String transport) {
+    Suggestions suggestions = new Suggestions();
+    if (transport.length() > 1) {
+      for (Transport t : partyService.findTransport(transport)) {
+        suggestions.add(String.valueOf(t.getId()), t.toString());
+      }
+    } else {
+      suggestions.add("-1", "default");
+    }
+    return suggestions;
+  }
 }

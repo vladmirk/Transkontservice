@@ -5,11 +5,15 @@ import com.vladmirk.transkontservice.party.ExpeditorRepository;
 import com.vladmirk.transkontservice.party.PartyName;
 import com.vladmirk.transkontservice.party.PartyService;
 import com.vladmirk.transkontservice.party.PartyType;
+import com.vladmirk.transkontservice.shipping.DriverInfo;
+import com.vladmirk.transkontservice.shipping.DriverInfoRepository;
 import com.vladmirk.transkontservice.shipping.ShippingOrder;
 import com.vladmirk.transkontservice.shipping.ShippingOrderRepository;
 import com.vladmirk.transkontservice.shipping.ShippingRelease;
 import com.vladmirk.transkontservice.shipping.ShippingReleaseRepository;
 import com.vladmirk.transkontservice.shipping.ShippingReleaseStatus;
+import com.vladmirk.transkontservice.shipping.Transport;
+import com.vladmirk.transkontservice.shipping.TransportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -35,15 +39,20 @@ public class InitApplication {
   private ShippingOrderRepository shippingOrderRepository;
   private ShippingReleaseRepository shippingReleaseRepository;
   private PartyService partyService;
+  private DriverInfoRepository driverInfoRepository;
+  private TransportRepository transportRepository;
   @Bean
   @Profile("dev")
   @Autowired
   CommandLineRunner setUp(final ExpeditorRepository expeditorRepository, final ShippingOrderRepository shippingOrderRepository,
-      final ShippingReleaseRepository shippingReleaseRepository, PartyService partyService) {
+      final ShippingReleaseRepository shippingReleaseRepository, PartyService partyService, DriverInfoRepository driverInfoRepository,
+      TransportRepository transportRepository) {
     this.expeditorRepository = expeditorRepository;
     this.shippingOrderRepository = shippingOrderRepository;
     this.shippingReleaseRepository = shippingReleaseRepository;
     this.partyService = partyService;
+    this.driverInfoRepository = driverInfoRepository;
+    this.transportRepository = transportRepository;
     Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Init the app");
 
     return (args) -> {
@@ -52,7 +61,24 @@ public class InitApplication {
       createPartyNames();
       createShippingOrders(expeditor);
       partyService.init();
+
+      createCarrierInfo();
     };
+  }
+  private void createCarrierInfo() {
+    DriverInfo info = new DriverInfo();
+    info.setName("Иван");
+    info.setSecondName("Иванович");
+    info.setSurname("Иванов");
+    info.setPassport("Паспорт 111 от РОВД");
+    driverInfoRepository.save(info);
+
+
+    PartyName model = new PartyName(PartyType.TRANS_MODEL, "VOLVO");
+    model = partyService.savePartyName(model);
+    transportRepository.save(new Transport(model, "a111bb62", "е1567"));
+    transportRepository.save(new Transport(model, "c11162", "x9999"));
+
   }
 
   private void createPartyNames() {

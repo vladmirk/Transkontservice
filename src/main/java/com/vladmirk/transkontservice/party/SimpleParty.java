@@ -3,6 +3,8 @@ package com.vladmirk.transkontservice.party;
 import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @MappedSuperclass
 public class SimpleParty extends Common implements Party {
   private String name;
@@ -40,6 +42,6 @@ public class SimpleParty extends Common implements Party {
 
   @Override
   public String toString() {
-    return getName();
+    return isEmpty(getName()) ? "" : getName();
   }
 }

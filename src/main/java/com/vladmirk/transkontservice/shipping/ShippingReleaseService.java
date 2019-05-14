@@ -3,30 +3,21 @@ package com.vladmirk.transkontservice.shipping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ShippingReleaseService {
   private ShippingReleaseRepository shippingReleaseRepository;
   private ShippingOrderRepository orderRepository;
-
-  enum Category {
-    LOAD
-  }
-  private static Map<Category, List<String>> hash = new HashMap();
-  static {
-    for (Category c : Category.values()) {
-
-    }
-  }
+  private CarrierInfoRepository carrierInfoRepository;
 
   @Autowired
-  public ShippingReleaseService(final ShippingReleaseRepository shippingReleaseRepository, final ShippingOrderRepository orderRepository) {
+  public ShippingReleaseService(final ShippingReleaseRepository shippingReleaseRepository, final ShippingOrderRepository orderRepository,
+      final CarrierInfoRepository carrierInfoRepository) {
     this.shippingReleaseRepository = shippingReleaseRepository;
     this.orderRepository = orderRepository;
+    this.carrierInfoRepository = carrierInfoRepository;
   }
 
   public List<ShippingRelease> findShippingReleases() {
@@ -49,9 +40,18 @@ public class ShippingReleaseService {
     return orderRepository.save(order);
   }
 
-  public List<String> findLoads(String load) {
-    List<String> loads = hash.get(Category.LOAD);
-    return loads;
+
+  public CarrierInfo createNewCarrierInfo() {
+    return carrierInfoRepository.save(new CarrierInfo());
   }
+
+  public Optional<CarrierInfo> findCarrierInfoById(Long id) {
+    return carrierInfoRepository.findById(id);
+  }
+
+  public CarrierInfo saveCarrierInfo(CarrierInfo carrierInfo) {
+    return carrierInfoRepository.save(carrierInfo);
+  }
+
 
 }
