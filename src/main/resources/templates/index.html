@@ -32,9 +32,88 @@
             });
           </script>
           <button type="submit" class="btn btn-primary">OK</button>
+          <a href="javascript:void(0);" data-href="/testModal" data-modal-name="exampleModalLong" class="openPopup">About Us Order</a>
+          <a href="javascript:void(0);" data-href="/" class="openPopup">About Us</a>
         </form>
       </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body"></div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $('.openPopup').on('click', function () {
+          var dataURL = $(this).attr('data-href');
+          var modalName = '#' + $(this).attr('data-modal-name');
+          $('.modal-body').load(dataURL, function () {
+            $(modalName).modal({show: true});
+          });
+        });
+        $('#exampleModalLong button.btn.btn-primary').click(function (event) {
+
+          var url = "/testModal"; // the script where you handle the form input.
+
+          $.ajax({
+            type: "POST",
+            url: url,
+            data: $('#modalTestForm').serialize(), // serializes the form's elements.
+            success:
+              function (data) {
+                $('#suggestTest').val(data.name);
+                $('#suggestTestCode').val(data.code);
+                // alert(data.name)
+                // $.each(data, function (index, element) {
+                //   $('body').append($('<div>', {
+                //     text: element.name
+                //   }));
+                // });
+
+
+                display(data); // show response from the php script.
+                // $(cardId).html(data);
+              }
+
+            ,
+            error: function (e) {
+              console.log("ERROR: ", e);
+              display(e);
+            }
+            ,
+            done: function (e) {
+              console.log("DONE");
+              // enableSearchButton(true);
+            }
+          });
+          event.preventDefault(); // avoid to execute the actual submit of the form.
+        });
+
+      });
+
+      function display(data) {
+        var json = "<h4>Ajax Response</h4><pre>"
+          + JSON.stringify(data, null, 4) + "</pre>";
+        alert(json);
+        // $('#feedback').html(json);
+      }
+    </script>
     <!-- /.container -->
     <div th:replace="fragments/footer :: footer" />
   </body>
