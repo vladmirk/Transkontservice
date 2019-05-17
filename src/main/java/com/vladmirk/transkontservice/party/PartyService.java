@@ -65,6 +65,10 @@ public class PartyService {
     return driverInfoRepository.findDriverInfoByNameContainingOrSecondNameContainingOrSurnameContainingOrPassportContainingAllIgnoreCase(s, s, s, s);
   }
 
+  public DriverInfo saveDriverInfo(DriverInfo driverInfo) {
+    return driverInfoRepository.save(driverInfo);
+  }
+
   public List<Transport> findTransport(String transport) {
     String s = getPattern(transport);
     return transportRepository.findTransportByTruckPlateNumberContainingOrTrailerPlateNumberContainingAllIgnoreCase(s, s);

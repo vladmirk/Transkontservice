@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+  </head>
+  <body>
+
+    <div th:fragment="driverInfoForm" class="container">
+      <form method="post" id="driverInfoForm" th:action="@{/party/newDriverInfo}" th:object="${driverInfoForm}">
+        <!-- Surname-->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.surname')}"
+               th:errors="*{driverInfo.surname}"></div>
+          <label th:for="surname" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.surname}">Surname</label>
+          <div class="col-sm-10">
+            <input type="hidden" class="form-control" th:field="*{driverInfo.id}" />
+            <input type="text" class="form-control" th:id="surname" th:field="*{driverInfo.surname}" />
+          </div>
+        </div>
+
+        <!-- Name  -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.name')}"
+               th:errors="*{driverInfo.name}"></div>
+          <label th:for="driverName" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.name}">Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" th:id="driverName" th:field="*{driverInfo.name}" />
+          </div>
+        </div>
+
+        <!-- Second Name  -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.secondName')}"
+               th:errors="*{driverInfo.secondName}"></div>
+          <label th:for="secondName" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.secondName}">Second Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" th:id="secondName" th:field="*{driverInfo.secondName}" />
+          </div>
+        </div>
+        <!-- Passport  -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.passport')}"
+               th:errors="*{driverInfo.passport}"></div>
+          <label th:for="passport" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.passport}">Passport</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" th:id="passport" th:field="*{driverInfo.passport}" />
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </body>
+</html>

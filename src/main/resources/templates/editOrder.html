@@ -204,7 +204,9 @@
                 <input type="text" class="form-control" th:id="driverInfoStr" th:field="*{driverInfoStr}" />
                 <input type="hidden" class="form-control" th:id="driverInfoId" th:field="*{sR.carrierInfo.driverInfo.id}" />
                 <div class="input-group-append">
-                  <div class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i></div>
+                  <div class="btn btn-outline-secondary" type="button"><a href="javascript:void(0);" data-href="/party/newDriverInfo"
+                                                                          data-modal-name="newDriverInfoModal" class="newDriverInfo"><i
+                      class="fa fa-plus"></i></a></div>
                 </div>
               </div>
               <script>
@@ -256,7 +258,7 @@
                 <input type="text" class="form-control" th:id="cost" th:field="*{sR.carrierInfo.cost}" />
               </div>
             </div>
-          </div> <!--Carrier Infor -->
+          </div> <!-- end Carrier Infor -->
           <!-- Arrival Date -->
           <div class="form-group row mt-3">
             <label for="arrivalDate" class="col-sm-2 col-form-label" th:text="#{editOrders.arrivalDate}">arrival Date</label>
@@ -334,6 +336,75 @@
       </div> <!-- end of container -->
       <p>&nbsp;</p>
     </div> <!-- main container -->
+
+    <!-- Modal dialogs -->
+    <!-- Modal -->
+    <div class="modal fade" id="newDriverInfoModal" tabindex="-1" role="dialog" aria-labelledby="newDriverInfoModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body"></div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $('.newDriverInfo').on('click', function () {
+          var dataURL = $(this).attr('data-href');
+          var modalName = '#' + $(this).attr('data-modal-name');
+          $('.modal-body').load(dataURL, function () {
+            $(modalName).modal({show: true});
+            // $(modalName).modal('handleUpdate');
+          });
+        });
+
+        $('#newDriverInfoModal button.btn.btn-primary').click(function (event) {
+          var url = "/party/newDriverInfo"; // the script where you handle the form input.
+          $.ajax({
+            type: "POST",
+            url: url,
+            data: $('#driverInfoForm').serialize(), // serializes the form's elements.
+            success:
+              function (data) {
+                $('#driverInfoStr').val(data.description);
+                $('#driverInfoId').val(data.id);
+
+                display(data); // show response from the php script.
+                // $(cardId).html(data);
+              },
+            error: function (e) {
+              $('#driverInfoStr').val('');
+              $('#driverInfoId').val('');
+              console.log("ERROR: ", e);
+              display(e);
+            },
+            done: function (e) {
+              console.log("DONE");
+            }
+          });
+          event.preventDefault(); // avoid to execute the actual submit of the form.
+        });
+      });
+
+      function display(data) {
+        var json = "<h4>Ajax Response</h4><pre>"
+          + JSON.stringify(data, null, 4) + "</pre>";
+        alert(json);
+        // $('#feedback').html(json);
+      }
+    </script>
 
     <div th:replace="fragments/footer :: footer" />
   </body>
