@@ -204,9 +204,9 @@
                 <input type="text" class="form-control" th:id="driverInfoStr" th:field="*{driverInfoStr}" />
                 <input type="hidden" class="form-control" th:id="driverInfoId" th:field="*{sR.carrierInfo.driverInfo.id}" />
                 <div class="input-group-append">
-                  <div class="btn btn-outline-secondary" type="button"><a href="javascript:void(0);" data-href="/party/newDriverInfo"
-                                                                          data-modal-name="newDriverInfoModal" class="newDriverInfo"><i
-                      class="fa fa-plus"></i></a></div>
+                  <div class="btn btn-outline-secondary newDriverInfo" type="button" data-href="/party/newDriverInfo"
+                       data-modal-name="newDriverInfoModal"><i
+                      class="fa fa-plus"></i></div>
                 </div>
               </div>
               <script>
@@ -380,8 +380,9 @@
               function (data) {
                 $('#driverInfoStr').val(data.description);
                 $('#driverInfoId').val(data.id);
+                $('#newDriverInfoModal').modal('hide');
 
-                display(data); // show response from the php script.
+                // display(data); // show response from the php script.
                 // $(cardId).html(data);
               },
             error: function (e) {
