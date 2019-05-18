@@ -8,10 +8,10 @@
 
 <!--<div th:replace="fragments/header :: topnavbar"/>-->
 
-<div class="container">
+<div class="container-fluid">
 
     <div class="row" style="margin-top:20px">
-        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+        <div class="col-xs-12 col-sm-12 col-md-3 col-sm-offset-2 col-md-offset-3 justify-content-md-center">
             <form th:action="@{/login}" method="post">
                 <fieldset>
                     <h3 th:text="#{login.welcome}">Enter credentials</h3>

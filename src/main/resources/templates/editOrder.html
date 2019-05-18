@@ -1,412 +1,434 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <div th:replace="fragments/header :: header-css" />
+<head>
+    <div th:replace="fragments/header :: header-css"/>
     <title th:text="${orderForm.sR.order.orderNumber}">Edit Order</title>
-  </head>
-  <body>
+</head>
+<body>
 
-    <div class="container">
-      <div th:replace="fragments/header :: topnavbar" />
-      <div class="container-fluid">
+<div class="container-fluid">
+    <div th:replace="fragments/header :: topnavbar"/>
+    <div class="container-fluid">
 
         <h3 th:text="${orderForm.sR.order.orderNumber}">Edit Order</h3>
         <form method="post" th:action="@{#}" th:object="${orderForm}">
-          <!-- Date -->
-          <div class="form-group row">
-            <label for="orderDate" class="col-sm-2 col-form-label" th:text="#{editOrders.orderDate}">Order Date</label>
-            <div class="col-sm-10">
-              <div class="form-group">
-                <input type="hidden" class="form-control" th:field="*{sR.id}" />
-                <input type="hidden" class="form-control" th:field="*{sR.order.id}" />
-                <div class="input-group date" id="orderDate" data-target-input="nearest">
-                  <input type="text" class="form-control datetimepicker-input" data-target="#orderDate" th:field="*{sR.order.orderDate}"
-                         th:errorclass="border-danger" />
-                  <div class=" input-group-append" data-target="#orderDate" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>
+            <!-- Date -->
+            <div class="form-group row">
+                <label for="orderDate" class="col-md-2 col-form-label" th:text="#{editOrders.orderDate}">Order
+                    Date</label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" th:field="*{sR.id}"/>
+                        <input type="hidden" class="form-control" th:field="*{sR.order.id}"/>
+                        <div class="input-group date" id="orderDate" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#orderDate"
+                                   th:field="*{sR.order.orderDate}"
+                                   th:errorclass="border-danger"/>
+                            <div class=" input-group-append" data-target="#orderDate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#orderDate').datetimepicker({
+                            locale: 'ru', format: 'L',
+                            date: moment("[[${{orderForm.sR.order.orderDate}}]]", dateFormat())
+                        });
+                    });
+                </script>
             </div>
-            <script type="text/javascript">
-              $(function () {
-                $('#orderDate').datetimepicker({
-                  locale: 'ru', format: 'L',
-                  date: moment("[[${{orderForm.sR.order.orderDate}}]]", dateFormat())
-                });
-              });
-            </script>
-          </div>
-          <!-- Expeditor -->
-          <div class="form-group row">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.order.expeditor')}"
-                 th:errors="*{order.expeditor}"></div>
-            <label th:for="order.expeditor" class="col-sm-2 col-form-label" th:text="#{editOrders.expeditor}">Order Date</label>
-            <div class="col-sm-7">
-              <input type="text" class="form-control" th:id="expeditorName" th:field="*{sR.order.expeditor.name}" />
+            <!-- Expeditor -->
+            <div class="form-group row">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.order.expeditor')}"
+                     th:errors="*{order.expeditor}"></div>
+                <label th:for="order.expeditor" class="col-md-2 col-form-label" th:text="#{editOrders.expeditor}">Order
+                    Date</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" th:id="expeditorName"
+                           th:field="*{sR.order.expeditor.name}"/>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control-plaintext border rounded pl-2" th:id="expeditorCode"
+                           th:field="*{sR.order.expeditor.code}"
+                           readonly
+                           tabindex="-1"/>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#expeditorName').autocomplete({
+                            serviceUrl: '/suggest/expeditors',
+                            // minChars: 2,
+                            onSelect: function (suggestion) {
+                                $('#expeditorCode').val(suggestion.data);
+                                // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+                            },
+                            onSearchStart: function (params) {
+                                $('#expeditorCode').val('');
+                            }
+                        });
+                    });
+                </script>
             </div>
-            <div class="col-sm-3">
-              <input type="text" class="form-control-plaintext border rounded pl-2" th:id="expeditorCode" th:field="*{sR.order.expeditor.code}"
-                     readonly
-                     tabindex="-1" />
+            <!-- Load -->
+            <div class="form-group row">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.load')}"
+                     th:errors="*{sR.load}"></div>
+                <label th:for="srLoad" class="col-md-2 col-form-label" th:text="#{editOrders.load}">Load</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" th:id="srLoad" th:field="*{sR.load.name}"/>
+                    <input type="hidden" class="form-control" th:id="srLoadId" th:field="*{sR.load.id}"/>
+                </div>
+
+                <script>
+                    $(document).ready(function () {
+                        $('#srLoad').autocomplete({
+                            serviceUrl: '/suggest/load',
+                            onSelect: function (suggestion) {
+                                $('#srLoadId').val(suggestion.data);
+                            },
+                            onSearchStart: function (params) {
+                                $('#srLoadId').val('');
+                            }
+                        });
+                    });
+                </script>
             </div>
-            <script>
-              $(document).ready(function () {
-                $('#expeditorName').autocomplete({
-                  serviceUrl: '/suggest/expeditors',
-                  // minChars: 2,
-                  onSelect: function (suggestion) {
-                    $('#expeditorCode').val(suggestion.data);
-                    // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#expeditorCode').val('');
-                  }
-                });
-              });
-            </script>
-          </div>
-          <!-- Load -->
-          <div class="form-group row">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.load')}"
-                 th:errors="*{sR.load}"></div>
-            <label th:for="srLoad" class="col-sm-2 col-form-label" th:text="#{editOrders.load}">Load</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" th:id="srLoad" th:field="*{sR.load.name}" />
-              <input type="hidden" class="form-control" th:id="srLoadId" th:field="*{sR.load.id}" />
+            <!-- Unload -->
+            <div class="form-group row">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.unload')}"
+                     th:errors="*{sR.unload}"></div>
+                <label th:for="srUnload" class="col-md-2 col-form-label" th:text="#{editOrders.unload}">Unload</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" th:id="srUnload" th:field="*{sR.unload.name}"/>
+                    <input type="hidden" class="form-control" th:id="srUnloadId" th:field="*{sR.unload.id}"/>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#srUnload').autocomplete({
+                            serviceUrl: '/suggest/unload',
+                            onSelect: function (suggestion) {
+                                $('#srUnloadId').val(suggestion.data);
+                            },
+                            onSearchStart: function (params) {
+                                $('#srUnloadId').val('');
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            <!-- Unload City -->
+            <div class="form-group row">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.unloadCity')}"
+                     th:errors="*{sR.unloadCity}"></div>
+                <label th:for="srUnloadCity" class="col-md-2 col-form-label" th:text="#{editOrders.unloadCity}">Unload
+                    City</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" th:id="srUnloadCity" th:field="*{sR.unloadCity.name}"/>
+                    <input type="hidden" class="form-control" th:id="srUnloadCityId" th:field="*{sR.unloadCity.id}"/>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#srUnloadCity').autocomplete({
+                            serviceUrl: '/suggest/unloadCity',
+                            onSelect: function (suggestion) {
+                                $('#srUnloadCityId').val(suggestion.data);
+                            },
+                            onSearchStart: function (params) {
+                                $('#srUnloadCityId').val('');
+                            }
+                        });
+                    });
+                </script>
             </div>
 
-            <script>
-              $(document).ready(function () {
-                $('#srLoad').autocomplete({
-                  serviceUrl: '/suggest/load',
-                  onSelect: function (suggestion) {
-                    $('#srLoadId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srLoadId').val('');
-                  }
-                });
-              });
-            </script>
-          </div>
-          <!-- Unload -->
-          <div class="form-group row">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.unload')}"
-                 th:errors="*{sR.unload}"></div>
-            <label th:for="srUnload" class="col-sm-2 col-form-label" th:text="#{editOrders.unload}">Unload</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" th:id="srUnload" th:field="*{sR.unload.name}" />
-              <input type="hidden" class="form-control" th:id="srUnloadId" th:field="*{sR.unload.id}" />
+            <!-- Destination -->
+            <div class="form-group row">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.destination')}"
+                     th:errors="*{sR.destination}"></div>
+                <label th:for="srDestination" class="col-md-2 col-form-label" th:text="#{editOrders.destination}">Destination</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" th:id="srDestination" th:field="*{sR.destination.name}"/>
+                    <input type="hidden" class="form-control" th:id="srDestinationId" th:field="*{sR.destination.id}"/>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#srDestination').autocomplete({
+                            serviceUrl: '/suggest/destination',
+                            onSelect: function (suggestion) {
+                                $('#srDestinationId').val(suggestion.data);
+                            },
+                            onSearchStart: function (params) {
+                                $('#srDestinationId').val('');
+                            }
+                        });
+                    });
+                </script>
             </div>
-            <script>
-              $(document).ready(function () {
-                $('#srUnload').autocomplete({
-                  serviceUrl: '/suggest/unload',
-                  onSelect: function (suggestion) {
-                    $('#srUnloadId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srUnloadId').val('');
-                  }
-                });
-              });
-            </script>
-          </div>
-          <!-- Unload City -->
-          <div class="form-group row">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.unloadCity')}"
-                 th:errors="*{sR.unloadCity}"></div>
-            <label th:for="srUnloadCity" class="col-sm-2 col-form-label" th:text="#{editOrders.unloadCity}">Unload City</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" th:id="srUnloadCity" th:field="*{sR.unloadCity.name}" />
-              <input type="hidden" class="form-control" th:id="srUnloadCityId" th:field="*{sR.unloadCity.id}" />
+            <!-- Appointment Load Date -->
+            <div class="form-group row">
+                <label for="appointmentLoadDate" class="col-md-2 col-form-label"
+                       th:text="#{editOrders.appointmentLoadDate}">Appointment Load Date</label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <div class="input-group date" id="appointmentLoadDate" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input"
+                                   data-target="#appointmentLoadDate" th:field="*{sR.appointmentLoadDate}"
+                                   th:errorclass="border-danger"/>
+                            <div class=" input-group-append" data-target="#appointmentLoadDate"
+                                 data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#appointmentLoadDate').datetimepicker({
+                            locale: 'ru', format: 'L',
+                            date: moment("[[${{orderForm.sR.appointmentLoadDate}}]]", dateFormat())
+                        });
+                    });
+                </script>
             </div>
-            <script>
-              $(document).ready(function () {
-                $('#srUnloadCity').autocomplete({
-                  serviceUrl: '/suggest/unloadCity',
-                  onSelect: function (suggestion) {
-                    $('#srUnloadCityId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srUnloadCityId').val('');
-                  }
-                });
-              });
-            </script>
-          </div>
+            <!-- calculatedCost -->
+            <div class="form-group row">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.calculatedCost')}"
+                     th:errors="*{sR.calculatedCost}"></div>
+                <label th:for="calculatedCost" class="col-md-2 col-form-label" th:text="#{editOrders.calculatedCost}">Calculated
+                    Cost</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" th:id="calculatedCost" th:field="*{sR.calculatedCost}"/>
+                </div>
+            </div>
+            <!-- Carrier Info -->
+            <div class="bg-light  pt-3 pl-2 pr-2 pb-1">
+                <input type="hidden" class="form-control" th:field="*{sR.carrierInfo.id}"/>
+                <!-- Driver -->
+                <div class="form-group row">
+                    <div class="alert alert-danger" role="alert"
+                         th:if="${#fields.hasErrors('sR.carrierInfo.driverInfo')}"
+                         th:errors="*{sR.carrierInfo.driverInfo}"></div>
+                    <label th:for="driverInfo" class="col-md-2 col-form-label"
+                           th:text="#{editOrders.driver}">Driver</label>
+                    <div class="input-group mb-3 col-md-10">
+                        <input type="text" class="form-control" th:id="driverInfoStr" th:field="*{driverInfoStr}"/>
+                        <input type="hidden" class="form-control" th:id="driverInfoId"
+                               th:field="*{sR.carrierInfo.driverInfo.id}"/>
+                        <div class="input-group-append">
+                            <div class="btn btn-outline-secondary newDriverInfo" type="button"
+                                 data-href="/party/newDriverInfo"
+                                 data-modal-name="newDriverInfoModal"><i
+                                    class="fa fa-plus"></i></div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            $('#driverInfoStr').autocomplete({
+                                serviceUrl: '/suggest/driverInfo',
+                                onSelect: function (suggestion) {
+                                    $('#driverInfoId').val(suggestion.data);
+                                },
+                                onSearchStart: function (params) {
+                                    $('#driverInfoId').val('');
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+                <!-- Transport-->
+                <div class="form-group row">
+                    <div class="alert alert-danger" role="alert"
+                         th:if="${#fields.hasErrors('sR.carrierInfo.transport')}"
+                         th:errors="*{sR.carrierInfo.transport}"></div>
+                    <label th:for="transport" class="col-md-2 col-form-label" th:text="#{editOrders.transport}">Transport</label>
+                    <div class="input-group mb-3 col-md-10">
+                        <input type="text" class="form-control" th:id="transportStr" th:field="*{transportStr}"/>
+                        <input type="hidden" class="form-control" th:id="transportId"
+                               th:field="*{sR.carrierInfo.transport.id}"/>
+                        <div class="input-group-append">
+                            <div class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i></div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            $('#transportStr').autocomplete({
+                                serviceUrl: '/suggest/transport',
+                                onSelect: function (suggestion) {
+                                    $('#transportId').val(suggestion.data);
+                                },
+                                onSearchStart: function (params) {
+                                    $('#transportId').val('');
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+                <!-- Cost  -->
+                <div class="form-group row">
+                    <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.cost')}"
+                         th:errors="*{sR.carrierInfo.cost}"></div>
+                    <label th:for="cost" class="col-md-2 col-form-label" th:text="#{editOrders.cost}">Cost</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" th:id="cost" th:field="*{sR.carrierInfo.cost}"/>
+                    </div>
+                </div>
+            </div> <!-- end Carrier Infor -->
+            <!-- Arrival Date -->
+            <div class="form-group row mt-3">
+                <label for="arrivalDate" class="col-md-2 col-form-label" th:text="#{editOrders.arrivalDate}">arrival
+                    Date</label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <div class="input-group date" id="arrivalDate" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#arrivalDate"
+                                   th:field="*{sR.arrivalDate}"
+                                   th:errorclass="border-danger"/>
+                            <div class=" input-group-append" data-target="#arrivalDate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#arrivalDate').datetimepicker({
+                            locale: 'ru', format: 'L',
+                            date: moment("[[${{orderForm.sR.arrivalDate}}]]", dateFormat())
+                        });
+                    });
+                </script>
+            </div>
+            <!-- Load Date -->
+            <div class="form-group row ">
+                <label for="loadDate" class="col-md-2 col-form-label" th:text="#{editOrders.loadDate}">load Date</label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <div class="input-group date" id="loadDate" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#loadDate"
+                                   th:field="*{sR.loadDate}"
+                                   th:errorclass="border-danger"/>
+                            <div class=" input-group-append" data-target="#loadDate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#loadDate').datetimepicker({
+                            locale: 'ru', format: 'L',
+                            date: moment("[[${{orderForm.sR.loadDate}}]]", dateFormat())
+                        });
+                    });
+                </script>
+            </div>
+            <!-- Comment1 -->
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="comment1" th:text="#{editOrders.comment1}">Example
+                    textarea</label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <textarea class="form-control" id="comment1" rows="3" th:field="*{sR.comment1}"> </textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- Comment2 -->
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="comment2" th:text="#{editOrders.comment2}">Example
+                    textarea</label>
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <textarea class="form-control" id="comment2" rows="3" th:field="*{sR.comment2}"> </textarea>
+                    </div>
+                </div>
+            </div>
 
-          <!-- Destination -->
-          <div class="form-group row">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.destination')}"
-                 th:errors="*{sR.destination}"></div>
-            <label th:for="srDestination" class="col-sm-2 col-form-label" th:text="#{editOrders.destination}">Destination</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" th:id="srDestination" th:field="*{sR.destination.name}" />
-              <input type="hidden" class="form-control" th:id="srDestinationId" th:field="*{sR.destination.id}" />
-            </div>
-            <script>
-              $(document).ready(function () {
-                $('#srDestination').autocomplete({
-                  serviceUrl: '/suggest/destination',
-                  onSelect: function (suggestion) {
-                    $('#srDestinationId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srDestinationId').val('');
-                  }
-                });
-              });
-            </script>
-          </div>
-          <!-- Appointment Load Date -->
-          <div class="form-group row">
-            <label for="appointmentLoadDate" class="col-sm-2 col-form-label" th:text="#{editOrders.appointmentLoadDate}">Appointment Load Date</label>
-            <div class="col-sm-10">
-              <div class="form-group">
-                <div class="input-group date" id="appointmentLoadDate" data-target-input="nearest">
-                  <input type="text" class="form-control datetimepicker-input" data-target="#appointmentLoadDate" th:field="*{sR.appointmentLoadDate}"
-                         th:errorclass="border-danger" />
-                  <div class=" input-group-append" data-target="#appointmentLoadDate" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>
+            <!-- Submit -->
+            <div class=" form-group row">
+                <div class="col-md-2">
                 </div>
-              </div>
-            </div>
-            <script type="text/javascript">
-              $(function () {
-                $('#appointmentLoadDate').datetimepicker({
-                  locale: 'ru', format: 'L',
-                  date: moment("[[${{orderForm.sR.appointmentLoadDate}}]]", dateFormat())
-                });
-              });
-            </script>
-          </div>
-          <!-- calculatedCost -->
-          <div class="form-group row">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.calculatedCost')}"
-                 th:errors="*{sR.calculatedCost}"></div>
-            <label th:for="calculatedCost" class="col-sm-2 col-form-label" th:text="#{editOrders.calculatedCost}">Calculated Cost</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" th:id="calculatedCost" th:field="*{sR.calculatedCost}" />
-            </div>
-          </div>
-          <!-- Carrier Info -->
-          <div class="bg-light  pt-3 pl-2 pr-2 pb-1">
-            <input type="hidden" class="form-control" th:field="*{sR.carrierInfo.id}" />
-            <!-- Driver -->
-            <div class="form-group row">
-              <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.driverInfo')}"
-                   th:errors="*{sR.carrierInfo.driverInfo}"></div>
-              <label th:for="driverInfo" class="col-sm-2 col-form-label" th:text="#{editOrders.driver}">Driver</label>
-              <div class="input-group mb-3 col-sm-10">
-                <input type="text" class="form-control" th:id="driverInfoStr" th:field="*{driverInfoStr}" />
-                <input type="hidden" class="form-control" th:id="driverInfoId" th:field="*{sR.carrierInfo.driverInfo.id}" />
-                <div class="input-group-append">
-                  <div class="btn btn-outline-secondary newDriverInfo" type="button" data-href="/party/newDriverInfo"
-                       data-modal-name="newDriverInfoModal"><i
-                      class="fa fa-plus"></i></div>
+                <div class="col-md-10">
+                    <button type="submit" class="btn btn-success ">OK</button>
                 </div>
-              </div>
-              <script>
-                $(document).ready(function () {
-                  $('#driverInfoStr').autocomplete({
-                    serviceUrl: '/suggest/driverInfo',
-                    onSelect: function (suggestion) {
-                      $('#driverInfoId').val(suggestion.data);
-                    },
-                    onSearchStart: function (params) {
-                      $('#driverInfoId').val('');
-                    }
-                  });
-                });
-              </script>
             </div>
-            <!-- Transport-->
-            <div class="form-group row">
-              <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.transport')}"
-                   th:errors="*{sR.carrierInfo.transport}"></div>
-              <label th:for="transport" class="col-sm-2 col-form-label" th:text="#{editOrders.transport}">Transport</label>
-              <div class="input-group mb-3 col-sm-10">
-                <input type="text" class="form-control" th:id="transportStr" th:field="*{transportStr}" />
-                <input type="hidden" class="form-control" th:id="transportId" th:field="*{sR.carrierInfo.transport.id}" />
-                <div class="input-group-append">
-                  <div class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i></div>
-                </div>
-              </div>
-              <script>
-                $(document).ready(function () {
-                  $('#transportStr').autocomplete({
-                    serviceUrl: '/suggest/transport',
-                    onSelect: function (suggestion) {
-                      $('#transportId').val(suggestion.data);
-                    },
-                    onSearchStart: function (params) {
-                      $('#transportId').val('');
-                    }
-                  });
-                });
-              </script>
-            </div>
-            <!-- Cost  -->
-            <div class="form-group row">
-              <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.cost')}"
-                   th:errors="*{sR.carrierInfo.cost}"></div>
-              <label th:for="cost" class="col-sm-2 col-form-label" th:text="#{editOrders.cost}">Cost</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" th:id="cost" th:field="*{sR.carrierInfo.cost}" />
-              </div>
-            </div>
-          </div> <!-- end Carrier Infor -->
-          <!-- Arrival Date -->
-          <div class="form-group row mt-3">
-            <label for="arrivalDate" class="col-sm-2 col-form-label" th:text="#{editOrders.arrivalDate}">arrival Date</label>
-            <div class="col-sm-10">
-              <div class="form-group">
-                <div class="input-group date" id="arrivalDate" data-target-input="nearest">
-                  <input type="text" class="form-control datetimepicker-input" data-target="#arrivalDate" th:field="*{sR.arrivalDate}"
-                         th:errorclass="border-danger" />
-                  <div class=" input-group-append" data-target="#arrivalDate" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <script type="text/javascript">
-              $(function () {
-                $('#arrivalDate').datetimepicker({
-                  locale: 'ru', format: 'L',
-                  date: moment("[[${{orderForm.sR.arrivalDate}}]]", dateFormat())
-                });
-              });
-            </script>
-          </div>
-          <!-- Load Date -->
-          <div class="form-group row ">
-            <label for="loadDate" class="col-sm-2 col-form-label" th:text="#{editOrders.loadDate}">load Date</label>
-            <div class="col-sm-10">
-              <div class="form-group">
-                <div class="input-group date" id="loadDate" data-target-input="nearest">
-                  <input type="text" class="form-control datetimepicker-input" data-target="#loadDate" th:field="*{sR.loadDate}"
-                         th:errorclass="border-danger" />
-                  <div class=" input-group-append" data-target="#loadDate" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <script type="text/javascript">
-              $(function () {
-                $('#loadDate').datetimepicker({
-                  locale: 'ru', format: 'L',
-                  date: moment("[[${{orderForm.sR.loadDate}}]]", dateFormat())
-                });
-              });
-            </script>
-          </div>
-          <!-- Comment1 -->
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="comment1" th:text="#{editOrders.comment1}">Example textarea</label>
-            <div class="col-sm-10">
-              <div class="form-group">
-                <textarea class="form-control" id="comment1" rows="3" th:field="*{sR.comment1}"> </textarea>
-              </div>
-            </div>
-          </div>
-          <!-- Comment2 -->
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="comment2" th:text="#{editOrders.comment2}">Example textarea</label>
-            <div class="col-sm-10">
-              <div class="form-group">
-                <textarea class="form-control" id="comment2" rows="3" th:field="*{sR.comment2}"> </textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- Submit -->
-          <div class=" form-group row">
-            <div class="col-sm-2">
-            </div>
-            <div class="col-sm-10">
-              <button type="submit" class="btn btn-success ">OK</button>
-            </div>
-          </div>
         </form>
-      </div> <!-- end of container -->
-      <p>&nbsp;</p>
-    </div> <!-- main container -->
+    </div> <!-- end of container -->
+    <p>&nbsp;</p>
+</div> <!-- main container -->
 
-    <!-- Modal dialogs -->
-    <!-- Modal -->
-    <div class="modal fade" id="newDriverInfoModal" tabindex="-1" role="dialog" aria-labelledby="newDriverInfoModalTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
+<!-- Modal dialogs -->
+<!-- Modal -->
+<div class="modal fade" id="newDriverInfoModal" tabindex="-1" role="dialog" aria-labelledby="newDriverInfoModalTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-          <div class="modal-body"></div>
+            <div class="modal-body"></div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <script>
-      $(document).ready(function () {
+<script>
+    $(document).ready(function () {
         $('.newDriverInfo').on('click', function () {
-          var dataURL = $(this).attr('data-href');
-          var modalName = '#' + $(this).attr('data-modal-name');
-          $('.modal-body').load(dataURL, function () {
-            $(modalName).modal({show: true});
-            // $(modalName).modal('handleUpdate');
-          });
+            var dataURL = $(this).attr('data-href');
+            var modalName = '#' + $(this).attr('data-modal-name');
+            $('.modal-body').load(dataURL, function () {
+                $(modalName).modal({show: true});
+                // $(modalName).modal('handleUpdate');
+            });
         });
 
         $('#newDriverInfoModal button.btn.btn-primary').click(function (event) {
-          var url = "/party/newDriverInfo"; // the script where you handle the form input.
-          $.ajax({
-            type: "POST",
-            url: url,
-            data: $('#driverInfoForm').serialize(), // serializes the form's elements.
-            success:
-              function (data) {
-                $('#driverInfoStr').val(data.description);
-                $('#driverInfoId').val(data.id);
-                $('#newDriverInfoModal').modal('hide');
+            var url = "/party/newDriverInfo"; // the script where you handle the form input.
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $('#driverInfoForm').serialize(), // serializes the form's elements.
+                success:
+                    function (data) {
+                        $('#driverInfoStr').val(data.description);
+                        $('#driverInfoId').val(data.id);
+                        $('#newDriverInfoModal').modal('hide');
 
-                // display(data); // show response from the php script.
-                // $(cardId).html(data);
-              },
-            error: function (e) {
-              $('#driverInfoStr').val('');
-              $('#driverInfoId').val('');
-              console.log("ERROR: ", e);
-              display(e);
-            },
-            done: function (e) {
-              console.log("DONE");
-            }
-          });
-          event.preventDefault(); // avoid to execute the actual submit of the form.
+                        // display(data); // show response from the php script.
+                        // $(cardId).html(data);
+                    },
+                error: function (e) {
+                    $('#driverInfoStr').val('');
+                    $('#driverInfoId').val('');
+                    console.log("ERROR: ", e);
+                    display(e);
+                },
+                done: function (e) {
+                    console.log("DONE");
+                }
+            });
+            event.preventDefault(); // avoid to execute the actual submit of the form.
         });
-      });
+    });
 
-      function display(data) {
+    function display(data) {
         var json = "<h4>Ajax Response</h4><pre>"
-          + JSON.stringify(data, null, 4) + "</pre>";
+            + JSON.stringify(data, null, 4) + "</pre>";
         alert(json);
         // $('#feedback').html(json);
-      }
-    </script>
+    }
+</script>
 
-    <div th:replace="fragments/footer :: footer" />
-  </body>
+<div th:replace="fragments/footer :: footer"/>
+</body>
 </html>
