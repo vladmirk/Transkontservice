@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
+    <div th:replace="fragments/header :: metaBlock" />
     <div th:replace="fragments/header :: header-css" />
     <title th:text="${orderForm.sR.order.orderNumber}">Edit Order</title>
   </head>
@@ -14,8 +15,8 @@
         <form method="post" th:action="@{#}" th:object="${orderForm}">
           <!-- Date -->
           <div class="form-group row">
-            <label for="orderDate" class="col-sm-2 col-form-label" th:text="#{editOrders.orderDate}">Order Date</label>
-            <div class="col-sm-10">
+            <label for="orderDate" class="col-lg-2 col-form-label" th:text="#{editOrders.orderDate}">Order Date</label>
+            <div class="col-lg-10">
               <div class="form-group">
                 <input type="hidden" class="form-control" th:field="*{sR.id}" />
                 <input type="hidden" class="form-control" th:field="*{sR.order.id}" />
@@ -41,11 +42,11 @@
           <div class="form-group row">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.order.expeditor')}"
                  th:errors="*{order.expeditor}"></div>
-            <label th:for="order.expeditor" class="col-sm-2 col-form-label" th:text="#{editOrders.expeditor}">Order Date</label>
-            <div class="col-sm-7">
+            <label th:for="order.expeditor" class="col-lg-2 col-form-label" th:text="#{editOrders.expeditor}">Order Date</label>
+            <div class="col-lg-7">
               <input type="text" class="form-control" th:id="expeditorName" th:field="*{sR.order.expeditor.name}" />
             </div>
-            <div class="col-sm-3">
+            <div class="col-lg-3">
               <input type="text" class="form-control-plaintext border rounded pl-2" th:id="expeditorCode" th:field="*{sR.order.expeditor.code}"
                      readonly
                      tabindex="-1" />
@@ -70,8 +71,8 @@
           <div class="form-group row">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.load')}"
                  th:errors="*{sR.load}"></div>
-            <label th:for="srLoad" class="col-sm-2 col-form-label" th:text="#{editOrders.load}">Load</label>
-            <div class="col-sm-10">
+            <label th:for="srLoad" class="col-lg-2 col-form-label" th:text="#{editOrders.load}">Load</label>
+            <div class="col-lg-10">
               <input type="text" class="form-control" th:id="srLoad" th:field="*{sR.load.name}" />
               <input type="hidden" class="form-control" th:id="srLoadId" th:field="*{sR.load.id}" />
             </div>
@@ -94,8 +95,8 @@
           <div class="form-group row">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.unload')}"
                  th:errors="*{sR.unload}"></div>
-            <label th:for="srUnload" class="col-sm-2 col-form-label" th:text="#{editOrders.unload}">Unload</label>
-            <div class="col-sm-10">
+            <label th:for="srUnload" class="col-lg-2 col-form-label" th:text="#{editOrders.unload}">Unload</label>
+            <div class="col-lg-10">
               <input type="text" class="form-control" th:id="srUnload" th:field="*{sR.unload.name}" />
               <input type="hidden" class="form-control" th:id="srUnloadId" th:field="*{sR.unload.id}" />
             </div>
@@ -117,8 +118,8 @@
           <div class="form-group row">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.unloadCity')}"
                  th:errors="*{sR.unloadCity}"></div>
-            <label th:for="srUnloadCity" class="col-sm-2 col-form-label" th:text="#{editOrders.unloadCity}">Unload City</label>
-            <div class="col-sm-10">
+            <label th:for="srUnloadCity" class="col-lg-2 col-form-label" th:text="#{editOrders.unloadCity}">Unload City</label>
+            <div class="col-lg-10">
               <input type="text" class="form-control" th:id="srUnloadCity" th:field="*{sR.unloadCity.name}" />
               <input type="hidden" class="form-control" th:id="srUnloadCityId" th:field="*{sR.unloadCity.id}" />
             </div>
@@ -141,8 +142,8 @@
           <div class="form-group row">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.destination')}"
                  th:errors="*{sR.destination}"></div>
-            <label th:for="srDestination" class="col-sm-2 col-form-label" th:text="#{editOrders.destination}">Destination</label>
-            <div class="col-sm-10">
+            <label th:for="srDestination" class="col-lg-2 col-form-label" th:text="#{editOrders.destination}">Destination</label>
+            <div class="col-lg-10">
               <input type="text" class="form-control" th:id="srDestination" th:field="*{sR.destination.name}" />
               <input type="hidden" class="form-control" th:id="srDestinationId" th:field="*{sR.destination.id}" />
             </div>
@@ -162,8 +163,8 @@
           </div>
           <!-- Appointment Load Date -->
           <div class="form-group row">
-            <label for="appointmentLoadDate" class="col-sm-2 col-form-label" th:text="#{editOrders.appointmentLoadDate}">Appointment Load Date</label>
-            <div class="col-sm-10">
+            <label for="appointmentLoadDate" class="col-lg-2 col-form-label" th:text="#{editOrders.appointmentLoadDate}">Appointment Load Date</label>
+            <div class="col-lg-10">
               <div class="form-group">
                 <div class="input-group date" id="appointmentLoadDate" data-target-input="nearest">
                   <input type="text" class="form-control datetimepicker-input" data-target="#appointmentLoadDate" th:field="*{sR.appointmentLoadDate}"
@@ -187,8 +188,8 @@
           <div class="form-group row">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.calculatedCost')}"
                  th:errors="*{sR.calculatedCost}"></div>
-            <label th:for="calculatedCost" class="col-sm-2 col-form-label" th:text="#{editOrders.calculatedCost}">Calculated Cost</label>
-            <div class="col-sm-10">
+            <label th:for="calculatedCost" class="col-lg-2 col-form-label" th:text="#{editOrders.calculatedCost}">Calculated Cost</label>
+            <div class="col-lg-10">
               <input type="text" class="form-control" th:id="calculatedCost" th:field="*{sR.calculatedCost}" />
             </div>
           </div>
@@ -199,8 +200,8 @@
             <div class="form-group row">
               <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.driverInfo')}"
                    th:errors="*{sR.carrierInfo.driverInfo}"></div>
-              <label th:for="driverInfo" class="col-sm-2 col-form-label" th:text="#{editOrders.driver}">Driver</label>
-              <div class="input-group mb-3 col-sm-10">
+              <label th:for="driverInfo" class="col-lg-2 col-form-label" th:text="#{editOrders.driver}">Driver</label>
+              <div class="input-group mb-3 col-lg-10">
                 <input type="text" class="form-control" th:id="driverInfoStr" th:field="*{driverInfoStr}" />
                 <input type="hidden" class="form-control" th:id="driverInfoId" th:field="*{sR.carrierInfo.driverInfo.id}" />
                 <div class="input-group-append">
@@ -227,8 +228,8 @@
             <div class="form-group row">
               <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.transport')}"
                    th:errors="*{sR.carrierInfo.transport}"></div>
-              <label th:for="transport" class="col-sm-2 col-form-label" th:text="#{editOrders.transport}">Transport</label>
-              <div class="input-group mb-3 col-sm-10">
+              <label th:for="transport" class="col-lg-2 col-form-label" th:text="#{editOrders.transport}">Transport</label>
+              <div class="input-group mb-3 col-lg-10">
                 <input type="text" class="form-control" th:id="transportStr" th:field="*{transportStr}" />
                 <input type="hidden" class="form-control" th:id="transportId" th:field="*{sR.carrierInfo.transport.id}" />
                 <div class="input-group-append">
@@ -253,16 +254,16 @@
             <div class="form-group row">
               <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('sR.carrierInfo.cost')}"
                    th:errors="*{sR.carrierInfo.cost}"></div>
-              <label th:for="cost" class="col-sm-2 col-form-label" th:text="#{editOrders.cost}">Cost</label>
-              <div class="col-sm-10">
+              <label th:for="cost" class="col-lg-2 col-form-label" th:text="#{editOrders.cost}">Cost</label>
+              <div class="col-lg-10">
                 <input type="text" class="form-control" th:id="cost" th:field="*{sR.carrierInfo.cost}" />
               </div>
             </div>
           </div> <!-- end Carrier Infor -->
           <!-- Arrival Date -->
           <div class="form-group row mt-3">
-            <label for="arrivalDate" class="col-sm-2 col-form-label" th:text="#{editOrders.arrivalDate}">arrival Date</label>
-            <div class="col-sm-10">
+            <label for="arrivalDate" class="col-lg-2 col-form-label" th:text="#{editOrders.arrivalDate}">arrival Date</label>
+            <div class="col-lg-10">
               <div class="form-group">
                 <div class="input-group date" id="arrivalDate" data-target-input="nearest">
                   <input type="text" class="form-control datetimepicker-input" data-target="#arrivalDate" th:field="*{sR.arrivalDate}"
@@ -284,8 +285,8 @@
           </div>
           <!-- Load Date -->
           <div class="form-group row ">
-            <label for="loadDate" class="col-sm-2 col-form-label" th:text="#{editOrders.loadDate}">load Date</label>
-            <div class="col-sm-10">
+            <label for="loadDate" class="col-lg-2 col-form-label" th:text="#{editOrders.loadDate}">load Date</label>
+            <div class="col-lg-10">
               <div class="form-group">
                 <div class="input-group date" id="loadDate" data-target-input="nearest">
                   <input type="text" class="form-control datetimepicker-input" data-target="#loadDate" th:field="*{sR.loadDate}"
@@ -307,8 +308,8 @@
           </div>
           <!-- Comment1 -->
           <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="comment1" th:text="#{editOrders.comment1}">Example textarea</label>
-            <div class="col-sm-10">
+            <label class="col-lg-2 col-form-label" for="comment1" th:text="#{editOrders.comment1}">Example textarea</label>
+            <div class="col-lg-10">
               <div class="form-group">
                 <textarea class="form-control" id="comment1" rows="3" th:field="*{sR.comment1}"> </textarea>
               </div>
@@ -316,8 +317,8 @@
           </div>
           <!-- Comment2 -->
           <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="comment2" th:text="#{editOrders.comment2}">Example textarea</label>
-            <div class="col-sm-10">
+            <label class="col-lg-2 col-form-label" for="comment2" th:text="#{editOrders.comment2}">Example textarea</label>
+            <div class="col-lg-10">
               <div class="form-group">
                 <textarea class="form-control" id="comment2" rows="3" th:field="*{sR.comment2}"> </textarea>
               </div>
@@ -326,9 +327,9 @@
 
           <!-- Submit -->
           <div class=" form-group row">
-            <div class="col-sm-2">
+            <div class="col-lg-2">
             </div>
-            <div class="col-sm-10">
+            <div class="col-lg-10">
               <button type="submit" class="btn btn-success ">OK</button>
             </div>
           </div>

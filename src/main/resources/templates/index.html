@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
+    <div th:replace="fragments/header :: metaBlock" />
     <div th:replace="fragments/header :: header-css" />
 
     <title th:text="#{home.title}">Index</title>
