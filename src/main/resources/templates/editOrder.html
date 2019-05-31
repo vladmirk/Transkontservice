@@ -208,7 +208,7 @@
                   <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newDriverInfo"
                        data-post-href="/party/newDriverInfo" th:attr="data-modal-title=#{editDriverInfo.title}"
                        data-modal-src-id="driverInfoId" data-modal-src-desc="driverInfoStr"
-                       data-modal-name="mainModal" data-modal-focus-field="surname">
+                       data-modal-name="mainModal" data-modal-focus-field="surname" data-modal-form-name="driverInfoForm">
                     <i class="fa fa-plus"></i>
                   </div>
                 </div>
@@ -236,7 +236,12 @@
                 <input type="text" class="form-control" th:id="transportStr" th:field="*{transportStr}" />
                 <input type="hidden" class="form-control" th:id="transportId" th:field="*{sR.carrierInfo.transport.id}" />
                 <div class="input-group-append">
-                  <div class="btn btn-outline-secondary" type="button"><i class="fa fa-plus"></i></div>
+                  <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newDriverInfo"
+                       data-post-href="/party/newDriverInfo" th:attr="data-modal-title=#{editDriverInfo.title}"
+                       data-modal-src-id="driverInfoId" data-modal-src-desc="driverInfoStr"
+                       data-modal-name="myModal2" data-modal-focus-field="surname" data-modal-form-name="driverInfoForm">
+                    <i class="fa fa-plus"></i>
+                  </div>
                 </div>
               </div>
               <script>
@@ -341,8 +346,33 @@
       <p>&nbsp;</p>
     </div> <!-- main container -->
 
+    <!------- -->
+    <div class="modal fade focusModal" id="secondModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h5 class="modal-title">
+              <span id="secondModalTitleText" />
+            </h5>
+
+          </div>
+          <div class="container"></div>
+          <div class="modal-body">
+            <div id="secondModalBody"></div>
+          </div>
+          <div class="modal-footer"><a href="#" data-dismiss="modal" class="btn">Close</a>
+            <a href="#" class="btn btn-primary">Save changes</a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!------- -->
+
     <div th:replace="fragments/modalForm :: mainModal" />
 
+    <script type="text/javascript" src="/js/modalForms.js"></script>
     <div th:replace="fragments/footer :: footer" />
   </body>
 </html>

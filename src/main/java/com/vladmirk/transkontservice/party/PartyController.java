@@ -8,12 +8,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping(value = "/party")
 public class PartyController {
 
   private PartyService partyService;
@@ -22,7 +24,7 @@ public class PartyController {
     this.partyService = partyService;
   }
 
-  @GetMapping("/party/newDriverInfo")
+  @GetMapping("/newDriverInfo")
   public ModelAndView newDriverInfo(ModelAndView model) {
     addDefaultPropertiesToDriverFormModel(model, new DriverInforForm());
     return model;
@@ -33,7 +35,7 @@ public class PartyController {
     model.setViewName("fragments/driverInfoForm :: driverInfoForm");
   }
 
-  @PostMapping("/party/newDriverInfo")
+  @PostMapping("/newDriverInfo")
   @ResponseBody
   public DriverInfo newDriverInfo(@Valid DriverInforForm driverInfoForm, BindingResult bindingResult, ModelAndView model) throws
       DriverInforBindingException {
