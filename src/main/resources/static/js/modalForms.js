@@ -28,15 +28,8 @@ function initModal() {
 
 
 function show(modal) {
-  modals.forEach(function (i) {
-    if (modal.id != i.id) {
-      hide(i);
-    }
-  })
-  // $(modal.id).modal({show: true});
   curModal = modal;
   $(modal.id).modal('show');
-
 }
 
 function hide(modal) {
