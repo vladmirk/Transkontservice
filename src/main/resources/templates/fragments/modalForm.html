@@ -1,0 +1,98 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+  <head>
+  </head>
+  <body>
+
+    <div th:fragment="mainModal">
+
+      <!-- Modal dialogs -->
+      <!-- Modal Driver Edit -->
+      <div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="mainModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <span id="mainModalTitleText" />
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body"></div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="-1" th:text="#{button.cancel}">Cancel</button>
+              <button type="button" class="btn btn-success" id="modalOKButton" th:text="#{button.ok}">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        var modalName, modalTitle, modalFormURL, modalFormPostURL, modalSrcIDField, modalSrcDescField, modalDefaultFocusField;
+
+        function showModal() {
+          $('.modal-body').load(modalFormURL, function () {
+            $(modalName).modal({show: true});
+            $('#mainModalTitleText').html(modalTitle);
+            // $(modalName).modal('handleUpdate');
+          });
+        }
+
+        $(document).ready(function () {
+
+          $('.modalFormTrigger').on('click', function () {
+            modalName = '#' + $(this).attr('data-modal-name');
+            modalTitle = $(this).attr('data-modal-title');
+            modalFormURL = $(this).attr('data-href');
+            modalDefaultFocusField = '#' + $(this).attr('data-modal-focus-field');
+            modalFormPostURL = $(this).attr('data-post-href');
+            modalSrcIDField = '#' + $(this).attr('data-modal-src-id');
+            modalSrcDescField = '#' + $(this).attr('data-modal-src-desc');
+            showModal();
+          });
+
+          $(modalName).on('shown.bs.modal', function () {
+            $(modalDefaultFocusField).trigger('focus')
+          })
+
+          $('#modalOKButton').click(function (event) {
+            $.ajax({
+              type: "POST",
+              url: modalFormPostURL,
+              data: $('#driverInfoForm').serialize(), // serializes the form's elements.
+              success:
+                function (data) {
+                  $(modalSrcDescField).val(data.description);
+                  $(modalSrcIDField).val(data.id);
+                  $(modalName).modal('hide');
+                },
+              error: function (e) {
+                $('.modal-body').html(e.responseText);
+                $(modalSrcDescField).val('');
+                $(modalSrcIDField).val('');
+                console.log("ERROR: ", e);
+                // display(e);
+              },
+              done: function (e) {
+                console.log("DONE");
+              }
+            });
+            event.preventDefault(); // avoid to execute the actual submit of the form.
+          });
+        });
+
+        function display(data) {
+          var json = "<h4>Ajax Response</h4><pre>"
+            + JSON.stringify(data, null, 4) + "</pre>";
+          alert(json);
+          // $('#feedback').html(json);
+        }
+      </script>
+
+    </div>
+
+  </body>
+</html>

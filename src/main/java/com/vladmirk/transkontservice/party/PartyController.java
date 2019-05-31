@@ -3,9 +3,9 @@ package com.vladmirk.transkontservice.party;
 import com.vladmirk.transkontservice.shipping.DriverInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,18 +24,33 @@ public class PartyController {
 
   @GetMapping("/party/newDriverInfo")
   public ModelAndView newDriverInfo(ModelAndView model) {
-    model.addObject("driverInfoForm", new DriverInforForm());
-    model.setViewName("fragments/driverInfoForm :: driverInfoForm");
-
+    addDefaultPropertiesToDriverFormModel(model, new DriverInforForm());
     return model;
+  }
+
+  private void addDefaultPropertiesToDriverFormModel(ModelAndView model, DriverInforForm driverInforForm) {
+    model.addObject("driverInfoForm", driverInforForm);
+    model.setViewName("fragments/driverInfoForm :: driverInfoForm");
   }
 
   @PostMapping("/party/newDriverInfo")
   @ResponseBody
-  public DriverInfo newDriverInfo(@Valid DriverInforForm driverInfoForm, BindingResult bindingResult) {
-//    if (bindingResult.hasErrors())
-//      return bindingResult;
-    return updateDiverInfo(driverInfoForm.getDriverInfo());
+  public DriverInfo newDriverInfo(@Valid DriverInforForm driverInfoForm, BindingResult bindingResult, ModelAndView model) throws
+      DriverInforBindingException {
+    if (bindingResult.hasErrors())
+      throw new DriverInforBindingException(driverInfoForm, bindingResult, model);
+
+    DriverInfo driverInfo = updateDiverInfo(driverInfoForm.getDriverInfo());
+    return driverInfo;
+  }
+
+  @ExceptionHandler(DriverInforBindingException.class)
+  public ModelAndView handleBindResultException(DriverInforBindingException e) {
+    ModelAndView m = e.getModelAndView();
+    addDefaultPropertiesToDriverFormModel(m, e.getDriverInforForm());
+    m.addObject("org.springframework.validation.BindingResult.driverInfoForm", e.getBindingResult());
+    m.setStatus(HttpStatus.EXPECTATION_FAILED);
+    return m;
   }
 
   private DriverInfo updateDiverInfo(DriverInfo driverInfo) {
@@ -44,7 +59,7 @@ public class PartyController {
     update.setSecondName(driverInfo.getSecondName());
     update.setSurname(driverInfo.getSurname());
     update.setPassport(driverInfo.getPassport());
-    ResponseEntity<DriverInfo> responseEntity = new ResponseEntity<DriverInfo>(driverInfo, HttpStatus.CREATED);
-    return partyService.saveDriverInfo(driverInfo);
+    return partyService.saveDriverInfo(update);
   }
 }
+

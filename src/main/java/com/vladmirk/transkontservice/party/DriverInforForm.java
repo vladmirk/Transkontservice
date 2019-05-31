@@ -2,10 +2,12 @@ package com.vladmirk.transkontservice.party;
 
 import com.vladmirk.transkontservice.shipping.DriverInfo;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 
 public class DriverInforForm implements Serializable {
 
+  @Valid
   private DriverInfo driverInfo;
 
   public DriverInforForm() {

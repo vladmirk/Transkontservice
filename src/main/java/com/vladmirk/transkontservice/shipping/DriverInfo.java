@@ -1,6 +1,7 @@
 package com.vladmirk.transkontservice.shipping;
 
 import com.vladmirk.transkontservice.party.Common;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Transient;
 public class DriverInfo extends Common {
   private String name;
   private String secondName;
+  @Length(min = 2)
   private String surname;
   private String passport;
 
