@@ -1,17 +1,3 @@
-// var fstModalName = 'mainModal'
-// var sndModalName = 'secondModal'
-
-// var fstModal = {
-//   name: fstModalName, id: '#' + fstModalName, title: "", formURL: "", formName: "", formPostURL: "", srcIDField: "", srcDescField: "",
-//   defaultFocusField: ""
-// }
-// var sndModal = {
-//   name: sndModalName, id: '#' + sndModalName, title: "", formURL: "", formName: "", formPostURL: "", srcIDField: "", srcDescField: "",
-//   defaultFocusField: ""
-// }
-// var modals = [fstModal, sndModal]
-// var curModal;
-var prevModal;
 var modals = [];
 
 function current() {
@@ -30,7 +16,6 @@ function initModal() {
   $(bodyId()).load(cur.formURL, function () {
     var titleID = cur.id + '-TitleText';
     $(titleID).text(cur.title);
-    // $(modalName).modal('handleUpdate');
     showLast();
   });
 }
@@ -46,27 +31,28 @@ function showByName(name) {
   $(name).modal('show');
 }
 
-function hideCurrent() {
-  if (modals.length == 0) {
-    return;
+function hide(aModel) {
+  remove(aModel);
+  $(aModel.id).modal('hide');
+}
+
+function remove(aModal) {
+  for (var i = modals.length - 1; i >= 0; i--) {
+    if (modals[i].name == aModal.name) {
+      modals.splice(i, 1);
+    }
   }
-  var cur = modals.pop();
-  // $(modal.id).removeClass("in");
-  // $(".modal-backdrop").remove();
-  $(cur.id).modal('hide');
-  // $(modal.id).modal('hide');
+}
+
+function addToModals(aModal) {
+  remove(aModal);
+  modals.push(aModal);
+  initModal();
 }
 
 $(document).ready(function () {
 
   $(document).on('click', '.modalFormTrigger', function () {
-    // hide(curModal);
-    // var modalName = $(this).attr('data-modal-name');
-    // if (fstModalName == modalName) {
-    //   curModal = fstModal
-    // } else {
-    //   curModal = sndModal;
-    // }
     var aModal = new Object();
     aModal.name = $(this).attr('data-modal-name');
     aModal.id = '#' + aModal.name;
@@ -78,9 +64,7 @@ $(document).ready(function () {
     aModal.formPostURL = $(this).attr('data-post-href');
     aModal.srcIDField = '#' + $(this).attr('data-modal-src-id');
     aModal.srcDescField = '#' + $(this).attr('data-modal-src-desc');
-    modals.push(aModal);
-    initModal();
-    // curModal = fstModalName;
+    addToModals(aModal);
   });
 
   $(document).on('shown.bs.modal', '.focusModal', function () {
@@ -89,26 +73,29 @@ $(document).ready(function () {
     }
   })
 
-  $(document).on('hidden.bs.modal', '.modal', function () {
-    // var cur = current();
-    // if (cur == undefined) {
-    //   return;
-    // }
-    // showLast()
-  })
-
-
   $(document).on('click', ".modal-ok-button", function (event) {
+    var idOK = $(this).attr('id');
+    idOK = idOK.substring(0, idOK.lastIndexOf('-OK'));
+    var cur = undefined;
+    for (var i = 0; i < modals.length; i++) {
+      if (modals[i].name == idOK) {
+        cur = modals[i];
+      }
+    }
+    if (cur == undefined) {
+      return;
+    }
+
     $.ajax({
       type: "POST",
-      url: current().formPostURL,
-      data: $(current().formName).serialize(), // serializes the form's elements.
+      url: cur.formPostURL,
+      data: $(cur.formName).serialize(), // serializes the form's elements.
       success:
         function (data) {
-          $(current().srcDescField).val(data.description);
-          $(current().srcIDField).val(data.id);
+          $(cur.srcDescField).val(data.description);
+          $(cur.srcIDField).val(data.id);
           // $(curModal).modal('hide');
-          hideCurrent();
+          hide(cur);
         },
       error: function (e) {
         $(bodyId()).html(e.responseText);
@@ -127,18 +114,6 @@ $(document).ready(function () {
 
 function bodyId() {
   return current().id + '-Body';
-}
-
-function getPrevious() {
-  if (current() != undefined) {
-    var name = current().id;
-    var sec = name.substr(-1);
-    if (sec == '1') {
-      return undefined;
-    }
-    var prev = sec - 1;
-    return name.substr(0, name.length - 1) + prev;
-  }
 }
 
 function display(data) {
