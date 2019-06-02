@@ -1,94 +1,119 @@
-var fstModalName = 'mainModal'
-var sndModalName = 'secondModal'
+// var fstModalName = 'mainModal'
+// var sndModalName = 'secondModal'
 
-var fstModal = {
-  name: fstModalName, id: '#' + fstModalName, title: "", formURL: "", formName: "", formPostURL: "", srcIDField: "", srcDescField: "",
-  defaultFocusField: ""
-}
-var sndModal = {
-  name: sndModalName, id: '#' + sndModalName, title: "", formURL: "", formName: "", formPostURL: "", srcIDField: "", srcDescField: "",
-  defaultFocusField: ""
-}
-var modals = [fstModal, sndModal]
-var curModal;
+// var fstModal = {
+//   name: fstModalName, id: '#' + fstModalName, title: "", formURL: "", formName: "", formPostURL: "", srcIDField: "", srcDescField: "",
+//   defaultFocusField: ""
+// }
+// var sndModal = {
+//   name: sndModalName, id: '#' + sndModalName, title: "", formURL: "", formName: "", formPostURL: "", srcIDField: "", srcDescField: "",
+//   defaultFocusField: ""
+// }
+// var modals = [fstModal, sndModal]
+// var curModal;
+var prevModal;
+var modals = [];
 
-function bodyId() {
-  return curModal.id + 'Body';
+function current() {
+  if (modals.length > 0) {
+    return modals[modals.length - 1];
+  } else {
+    return undefined;
+  }
 }
 
 function initModal() {
-
-  $(bodyId()).load(curModal.formURL, function () {
-    show(curModal);
-    var titleID = curModal.id + 'TitleText';
-    $(titleID).text(curModal.title);
+  var cur = current();
+  if (cur == undefined) {
+    return;
+  }
+  $(bodyId()).load(cur.formURL, function () {
+    var titleID = cur.id + '-TitleText';
+    $(titleID).text(cur.title);
     // $(modalName).modal('handleUpdate');
+    showLast();
   });
 }
 
 
-function show(modal) {
-  curModal = modal;
-  $(modal.id).modal('show');
-}
-
-function hide(modal) {
-  if (modal != undefined) {
-    $(modal.id).removeClass("in");
-    $(".modal-backdrop").remove();
-    $(modal.id).modal('hide');
-    // $(modal.id).modal('hide');
+function showLast() {
+  if (current() != undefined) {
+    showByName(current().id);
   }
 }
 
-$(document).ready(function () {
-  $(document).on('click', '.modalFormTrigger', function () {
-    hide(curModal);
-    var modalName = $(this).attr('data-modal-name');
-    if (fstModalName == modalName) {
-      curModal = fstModal
-    } else {
-      curModal = sndModal;
-    }
+function showByName(name) {
+  $(name).modal('show');
+}
 
-    curModal.title = $(this).attr('data-modal-title');
-    curModal.formURL = $(this).attr('data-href');
-    curModal.formName = '#' + $(this).attr('data-modal-form-name');
-    curModal.defaultFocusField = '#' + $(this).attr('data-modal-focus-field');
-    curModal.formPostURL = $(this).attr('data-post-href');
-    curModal.srcIDField = '#' + $(this).attr('data-modal-src-id');
-    curModal.srcDescField = '#' + $(this).attr('data-modal-src-desc');
+function hideCurrent() {
+  if (modals.length == 0) {
+    return;
+  }
+  var cur = modals.pop();
+  // $(modal.id).removeClass("in");
+  // $(".modal-backdrop").remove();
+  $(cur.id).modal('hide');
+  // $(modal.id).modal('hide');
+}
+
+$(document).ready(function () {
+
+  $(document).on('click', '.modalFormTrigger', function () {
+    // hide(curModal);
+    // var modalName = $(this).attr('data-modal-name');
+    // if (fstModalName == modalName) {
+    //   curModal = fstModal
+    // } else {
+    //   curModal = sndModal;
+    // }
+    var aModal = new Object();
+    aModal.name = $(this).attr('data-modal-name');
+    aModal.id = '#' + aModal.name;
+    aModal.okButton = '#' + aModal.id + '-OK';
+    aModal.title = $(this).attr('data-modal-title');
+    aModal.formURL = $(this).attr('data-href');
+    aModal.formName = '#' + $(this).attr('data-modal-form-name');
+    aModal.defaultFocusField = '#' + $(this).attr('data-modal-focus-field');
+    aModal.formPostURL = $(this).attr('data-post-href');
+    aModal.srcIDField = '#' + $(this).attr('data-modal-src-id');
+    aModal.srcDescField = '#' + $(this).attr('data-modal-src-desc');
+    modals.push(aModal);
     initModal();
     // curModal = fstModalName;
   });
 
   $(document).on('shown.bs.modal', '.focusModal', function () {
-    if (curModal.defaultFocusField.length > 1) {
-      $(curModal.defaultFocusField).trigger('focus')
+    if (current().defaultFocusField.length > 1) {
+      $(current().defaultFocusField).trigger('focus')
     }
   })
 
+  $(document).on('hidden.bs.modal', '.modal', function () {
+    // var cur = current();
+    // if (cur == undefined) {
+    //   return;
+    // }
+    // showLast()
+  })
 
-  function modalFormOkButtonClick(event, url_, form_) {
 
-  }
-
-  $('#modalOKButton').click(function (event) {
+  $(document).on('click', ".modal-ok-button", function (event) {
     $.ajax({
       type: "POST",
-      url: curModal.formPostURL,
-      data: $(curModal.formName).serialize(), // serializes the form's elements.
+      url: current().formPostURL,
+      data: $(current().formName).serialize(), // serializes the form's elements.
       success:
         function (data) {
-          $(curModal.srcDescField).val(data.description);
-          $(curModal.srcIDField).val(data.id);
+          $(current().srcDescField).val(data.description);
+          $(current().srcIDField).val(data.id);
           // $(curModal).modal('hide');
-          hide(curModal);
+          hideCurrent();
         },
       error: function (e) {
         $(bodyId()).html(e.responseText);
-        $(curModal.srcDescField).val('');
-        $(curModal.srcIDField).val('');
+        $(current().srcDescField).val('');
+        $(current().srcIDField).val('');
         console.log("ERROR: ", e);
         // display(e);
       },
@@ -99,6 +124,22 @@ $(document).ready(function () {
     event.preventDefault(); // avoid to execute the actual submit of the form.
   });
 });
+
+function bodyId() {
+  return current().id + '-Body';
+}
+
+function getPrevious() {
+  if (current() != undefined) {
+    var name = current().id;
+    var sec = name.substr(-1);
+    if (sec == '1') {
+      return undefined;
+    }
+    var prev = sec - 1;
+    return name.substr(0, name.length - 1) + prev;
+  }
+}
 
 function display(data) {
   var json = "<h4>Ajax Response</h4><pre>"

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -41,6 +42,7 @@ public class ShippingController {
   public ModelAndView editOrder(@PathVariable Long id, ModelAndView model) {
     model.addObject("orderForm", new OrderForm(shippingReleaseService.findById(id).get()));
     model.setViewName("editOrder");
+    model.addObject("modals", Arrays.asList("appModal-1", "appModal-2"));
 
     return model;
   }

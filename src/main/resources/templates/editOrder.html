@@ -206,9 +206,9 @@
                 <input type="hidden" class="form-control" th:id="driverInfoId" th:field="*{sR.carrierInfo.driverInfo.id}" />
                 <div class="input-group-append">
                   <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newDriverInfo"
-                       data-post-href="/party/newDriverInfo" th:attr="data-modal-title=#{editDriverInfo.title}"
+                       data-post-href="/party/newDriverInfo" data-th-attr="data-modal-title=#{editDriverInfo.title}, data-modal-name=${modals[0]}"
                        data-modal-src-id="driverInfoId" data-modal-src-desc="driverInfoStr"
-                       data-modal-name="mainModal" data-modal-focus-field="surname" data-modal-form-name="driverInfoForm">
+                       data-modal-focus-field="surname" data-modal-form-name="driverInfoForm">
                     <i class="fa fa-plus"></i>
                   </div>
                 </div>
