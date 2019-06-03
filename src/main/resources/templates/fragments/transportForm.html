@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+  </head>
+  <body>
+
+    <div th:fragment="transportForm" class="container">
+      <form method="post" id="transportForm" th:action="@{/party/newTransport}" th:object="${transportForm}">
+        <!-- Truck Plate-->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('transport.truckPlateNumber')}"
+               th:errors="*{transport.truckPlateNumber}"></div>
+          <label th:for="truckPlateNumber" class="col-sm-2 col-form-label" th:text="#{editTransport.truckPlateNumber}">TruckPlateNumber</label>
+          <div class="col-sm-10">
+            <input type="hidden" class="form-control" th:field="*{transport.id}" />
+            <input type="text" class="form-control" th:id="truckPlateNumber" th:field="*{transport.truckPlateNumber}" />
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </body>
+</html>

@@ -82,4 +82,9 @@ public class Transport extends Common {
   public void setTrailerType(PartyName trailerType) {
     this.trailerType = trailerType;
   }
+
+  @Transient
+  public String getDescription() {
+    return getTruckPlateNumber();
+  }
 }

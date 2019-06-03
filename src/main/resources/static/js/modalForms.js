@@ -32,8 +32,8 @@ function showByName(name) {
 }
 
 function hide(aModel) {
-  remove(aModel);
   $(aModel.id).modal('hide');
+  remove(aModel);
 }
 
 function remove(aModal) {
@@ -56,7 +56,7 @@ $(document).ready(function () {
     var aModal = new Object();
     aModal.name = $(this).attr('data-modal-name');
     aModal.id = '#' + aModal.name;
-    aModal.okButton = '#' + aModal.id + '-OK';
+    aModal.okButton = aModal.id + '-OK';
     aModal.title = $(this).attr('data-modal-title');
     aModal.formURL = $(this).attr('data-href');
     aModal.formName = '#' + $(this).attr('data-modal-form-name');

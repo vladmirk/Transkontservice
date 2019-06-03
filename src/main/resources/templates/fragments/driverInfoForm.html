@@ -45,10 +45,10 @@
           </div>
         </div>
 
-        <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/"
-             data-post-href="/party/newDriverInfo" data-modal-title="Второй"
-             data-modal-src-id="driverInfoId" data-modal-src-desc="driverInfoStr"
-             data-modal-name="appModal-2" data-modal-focus-field="">
+        <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newTransport"
+             data-post-href="/party/newTransport" data-th-attr="data-modal-title=#{editTransport.title}, data-modal-name=${modals[1]}"
+             data-modal-src-id="transportId" data-modal-src-desc="surname"
+             data-modal-focus-field="truckPlateNumber" data-modal-form-name="transportForm">
           <i class="fa fa-plus"></i>
         </div>
 
