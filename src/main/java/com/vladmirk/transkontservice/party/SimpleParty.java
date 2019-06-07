@@ -44,4 +44,9 @@ public class SimpleParty extends Common implements Party {
   public String toString() {
     return isEmpty(getName()) ? "" : getName();
   }
+
+  @Override
+  public String getDescription() {
+    return toString();
+  }
 }

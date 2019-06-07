@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +27,24 @@ public class PartyController {
     this.partyService = partyService;
   }
 
+
+  @GetMapping("/newParty/{type:.+}")
+  public ModelAndView newParty(@PathVariable String type, ModelAndView model) {
+    addDefaultPropertiesToPartyFormModel(model, new PartyForm(new PartyName(PartyType.valueOf(type))));
+    return model;
+  }
+
+  @PostMapping("/newParty")
+  @ResponseBody
+  public PartyName newParty(@Valid PartyForm partyForm, BindingResult bindingResult, ModelAndView model) throws PartyNameBindingException {
+    if (bindingResult.hasErrors())
+      throw new PartyNameBindingException(partyForm, bindingResult, model);
+
+    PartyName partyName = updatePartyName(partyForm.getPartyName());
+    return partyName;
+  }
+
+
   @GetMapping("/newDriverInfo")
   public ModelAndView newDriverInfo(ModelAndView model) {
     addDefaultPropertiesToDriverFormModel(model, new DriverInforForm());
@@ -34,13 +53,24 @@ public class PartyController {
 
   private void addDefaultPropertiesToDriverFormModel(ModelAndView model, DriverInforForm driverInforForm) {
     model.addObject("driverInfoForm", driverInforForm);
-    model.setViewName("fragments/driverInfoForm :: driverInfoForm");
+    model.setViewName("fragments/modalFormItems :: driverInfoForm");
+    addModals(model);
+  }
+
+  private void addDefaultPropertiesToPartyFormModel(ModelAndView model, PartyForm partyForm) {
+    model.addObject("partyForm", partyForm);
+    model.setViewName("fragments/modalFormItems :: partyNameForm");
+    addModals(model);
+  }
+
+  private void addModals(ModelAndView model) {
     model.addObject("modals", Arrays.asList("appModal-1", "appModal-2"));
   }
 
   private void addDefaultPropertiesToTransportFormModel(ModelAndView model, TransportForm transportForm) {
     model.addObject("transportForm", transportForm);
-    model.setViewName("fragments/transportForm :: transportForm");
+    model.setViewName("fragments/modalFormItems :: transportForm");
+    addModals(model);
   }
 
   @PostMapping("/newDriverInfo")
@@ -71,6 +101,14 @@ public class PartyController {
     update.setPassport(driverInfo.getPassport());
     return partyService.saveDriverInfo(update);
   }
+
+  private PartyName updatePartyName(PartyName partyName) {
+    PartyName update = partyName.getId() == null ? new PartyName() : partyService.findPartyName(partyName.getId()).get();
+    update.setType(partyName.getType());
+    update.setName(partyName.getName());
+    return partyService.savePartyName(update);
+  }
+
 
   @GetMapping("/newTransport")
   public ModelAndView newTransport(ModelAndView model) {

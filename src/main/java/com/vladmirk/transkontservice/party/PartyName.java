@@ -14,6 +14,11 @@ public class PartyName extends SimpleParty implements Party {
     super();
   }
 
+  public PartyName(PartyType type) {
+    super();
+    setType(type);
+  }
+
   public PartyName(PartyType type, String name) {
     super(name);
     setType(type);

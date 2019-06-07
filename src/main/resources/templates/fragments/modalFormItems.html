@@ -1,0 +1,156 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+  </head>
+  <body>
+
+    <div th:fragment="driverInfoForm" class="container">
+      <form method="post" id="driverInfoForm" th:action="@{/party/newDriverInfo}" th:object="${driverInfoForm}">
+        <!-- Surname-->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.surname')}"
+               th:errors="*{driverInfo.surname}"></div>
+          <label th:for="surname" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.surname}">Surname</label>
+          <div class="col-sm-10">
+            <input type="hidden" class="form-control" th:field="*{driverInfo.id}" />
+            <input type="text" class="form-control" th:id="surname" th:field="*{driverInfo.surname}" />
+          </div>
+        </div>
+
+        <!-- Name  -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.name')}"
+               th:errors="*{driverInfo.name}"></div>
+          <label th:for="driverName" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.name}">Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" th:id="driverName" th:field="*{driverInfo.name}" />
+          </div>
+        </div>
+
+        <!-- Second Name  -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.secondName')}"
+               th:errors="*{driverInfo.secondName}"></div>
+          <label th:for="secondName" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.secondName}">Second Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" th:id="secondName" th:field="*{driverInfo.secondName}" />
+          </div>
+        </div>
+        <!-- Passport  -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('driverInfo.passport')}"
+               th:errors="*{driverInfo.passport}"></div>
+          <label th:for="passport" class="col-sm-2 col-form-label" th:text="#{editDriverInfo.passport}">Passport</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" th:id="passport" th:field="*{driverInfo.passport}" />
+          </div>
+        </div>
+
+        <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newTransport"
+             data-post-href="/party/newTransport" data-th-attr="data-modal-title=#{editTransport.title}, data-modal-name=${modals[1]}"
+             data-modal-src-id="transportId" data-modal-src-desc="surname"
+             data-modal-focus-field="truckPlateNumber" data-modal-form-name="transportForm">
+          <i class="fa fa-plus"></i>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Party Name -->
+    <div th:fragment="partyNameForm" class="container">
+      <form method="post" id="partyNameForm" th:action="@{/party/newParty}" th:object="${partyForm}">
+        <!-- Party Name -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('partyName.name')}"
+               th:errors="*{partyName.name}"></div>
+          <label th:for="partyNameName" class="col-lg-2 col-form-label" th:text="#{editPartyName.name}">Name</label>
+          <div class="input-group mb-3 col-lg-10">
+            <input type="text" class="form-control" th:id="partyName" th:field="*{partyName.name}" />
+            <input type="hidden" class="form-control" th:id="partyNameId" th:field="*{partyName.id}" />
+            <input type="hidden" class="form-control" th:id="partyNameType" th:field="*{partyName.type}" />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Transport Form -->
+    <div th:fragment="transportForm" class="container">
+      <form method="post" id="transportForm" th:action="@{/party/newTransport}" th:object="${transportForm}">
+        <!-- Truck Model -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('transport.truckModel.name')}"
+               th:errors="*{transport.truckModel.name}"></div>
+          <label th:for="truckModel" class="col-lg-2 col-form-label" th:text="#{editTransport.transportModel}">Transport Model</label>
+          <div class="input-group mb-3 col-lg-10">
+            <input type="text" class="form-control" th:id="truckModel" th:field="*{transport.truckModel.name}" />
+            <input type="hidden" class="form-control" th:id="truckModelId" th:field="*{transport.truckModel.id}" />
+            <div class="input-group-append">
+              <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newParty/TRANS_MODEL"
+                   data-post-href="/party/newParty" data-th-attr="data-modal-title=#{editTransport.truckModel}, data-modal-name=${modals[1]}"
+                   data-modal-src-id="truckModelId" data-modal-src-desc="truckModel"
+                   data-modal-focus-field="partyName" data-modal-form-name="partyNameForm">
+                <i class="fa fa-plus"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Truck Plate-->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('transport.truckPlateNumber')}"
+               th:errors="*{transport.truckPlateNumber}"></div>
+          <label th:for="truckPlateNumber" class="col-lg-2 col-form-label" th:text="#{editTransport.truckPlateNumber}">TruckPlateNumber</label>
+          <div class="mb-3 col-lg-10">
+            <input type="hidden" class="form-control" th:field="*{transport.id}" />
+            <input type="text" class="form-control" th:id="truckPlateNumber" th:field="*{transport.truckPlateNumber}" />
+          </div>
+        </div>
+        <!-- Truck Type -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('transport.truckType.name')}"
+               th:errors="*{transport.truckType.name}"></div>
+          <label th:for="truckType" class="col-lg-2 col-form-label" th:text="#{editTransport.truckType}">truckType</label>
+          <div class="input-group mb-3 col-lg-10">
+            <input type="text" class="form-control" th:id="truckType" th:field="*{transport.truckType.name}" />
+            <input type="hidden" class="form-control" th:id="truckTypeId" th:field="*{transport.truckType.id}" />
+            <div class="input-group-append">
+              <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newParty/TRUCK_TYPE"
+                   data-post-href="/party/newParty" data-th-attr="data-modal-title=#{editTransport.truckType}, data-modal-name=${modals[1]}"
+                   data-modal-src-id="truckTypeId" data-modal-src-desc="truckType"
+                   data-modal-focus-field="partyName" data-modal-form-name="partyNameForm">
+                <i class="fa fa-plus"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Trailer Plate-->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('transport.trailerPlateNumber')}"
+               th:errors="*{transport.trailerPlateNumber}"></div>
+          <label th:for="truckPlateNumber" class="col-lg-2 col-form-label" th:text="#{editTransport.trailerPlateNumber}">trailerPlateNumber</label>
+          <div class="mb-3 col-lg-10">
+            <input type="text" class="form-control" th:id="trailerPlateNumber" th:field="*{transport.trailerPlateNumber}" />
+          </div>
+        </div>
+        <!-- Trailer Type -->
+        <div class="form-group row">
+          <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('transport.trailerType.name')}"
+               th:errors="*{transport.trailerType.name}"></div>
+          <label th:for="trailerType" class="col-lg-2 col-form-label" th:text="#{editTransport.trailerType}">trailerType</label>
+          <div class="input-group mb-3 col-lg-10">
+            <input type="text" class="form-control" th:id="trailerType" th:field="*{transport.trailerType.name}" />
+            <input type="hidden" class="form-control" th:id="trailerTypeId" th:field="*{transport.trailerType.id}" />
+            <div class="input-group-append">
+              <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newParty/TRAILER_TYPE"
+                   data-post-href="/party/newParty" data-th-attr="data-modal-title=#{editTransport.trailerType}, data-modal-name=${modals[1]}"
+                   data-modal-src-id="trailerTypeId" data-modal-src-desc="trailerType"
+                   data-modal-focus-field="partyName" data-modal-form-name="partyNameForm">
+                <i class="fa fa-plus"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </body>
+</html>

@@ -85,6 +85,6 @@ public class Transport extends Common {
 
   @Transient
   public String getDescription() {
-    return getTruckPlateNumber();
+    return toString();
   }
 }

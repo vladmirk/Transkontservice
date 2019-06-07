@@ -4,4 +4,5 @@ import java.io.Serializable;
 
 public interface Party extends Serializable {
   String getName();
+  String getDescription();
 }

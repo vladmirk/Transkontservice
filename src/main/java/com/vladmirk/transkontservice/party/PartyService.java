@@ -127,13 +127,17 @@ public class PartyService {
 
   public PartyName savePartyNameOrCreateNew(PartyType type, PartyName partyName) {
     if (partyName.getId() != null && !isEmpty(partyName.getName())) {
-      Optional<PartyName> pn = partyNameRepository.findById(partyName.getId());
+      Optional<PartyName> pn = findPartyName(partyName.getId());
       if (pn.isPresent() && pn.get().getName().equalsIgnoreCase(partyName.getName())) {
         pn.get().setName(partyName.getName());
         return savePartyName(pn.get());
       }
     }
     return savePartyName(new PartyName(type, partyName.getName()));
+  }
+
+  public Optional<PartyName> findPartyName(Long id) {
+    return partyNameRepository.findById(id);
   }
 
 
