@@ -6,6 +6,7 @@ import com.vladmirk.transkontservice.shipping.Transport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,16 +32,16 @@ public class SuggestController {
     } else {
       suggestions.add("default", "default");
     }
-
     return suggestions;
   }
 
-  @GetMapping("/suggest/load")
+  @GetMapping("/suggest/party/{type:.+}")
   @ResponseBody
-  public Suggestions getLoads(@RequestParam(name = "query", defaultValue = "", required = false) String load) {
+  public Suggestions getPartyNames(@PathVariable PartyType type,
+      @RequestParam(name = "query", defaultValue = "", required = false) String partyName) {
     Suggestions suggestions = new Suggestions();
-    if (load.length() > 1) {
-      for (SimpleParty p : partyService.findPartyName(PartyType.LOAD, load)) {
+    if (partyName.length() > 1) {
+      for (SimpleParty p : partyService.findPartyName(type, partyName)) {
         suggestions.add(String.valueOf(p.getId()), p.getName());
       }
     } else {
@@ -49,6 +50,7 @@ public class SuggestController {
 
     return suggestions;
   }
+
 
   @GetMapping("/suggest/unload")
   @ResponseBody

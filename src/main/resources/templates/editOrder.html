@@ -44,28 +44,14 @@
                  th:errors="*{order.expeditor}"></div>
             <label th:for="order.expeditor" class="col-lg-2 col-form-label" th:text="#{editOrders.expeditor}">Order Date</label>
             <div class="col-lg-7">
-              <input type="text" class="form-control" th:id="expeditorName" th:field="*{sR.order.expeditor.name}" />
+              <input type="text" class="form-control suggester" th:id="expeditorName" data-id="expeditorCode" data-href="/suggest/expeditors"
+                     th:field="*{sR.order.expeditor.name}" />
             </div>
             <div class="col-lg-3">
               <input type="text" class="form-control-plaintext border rounded pl-2" th:id="expeditorCode" th:field="*{sR.order.expeditor.code}"
                      readonly
                      tabindex="-1" />
             </div>
-            <script>
-              $(document).ready(function () {
-                $('#expeditorName').autocomplete({
-                  serviceUrl: '/suggest/expeditors',
-                  // minChars: 2,
-                  onSelect: function (suggestion) {
-                    $('#expeditorCode').val(suggestion.data);
-                    // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#expeditorCode').val('');
-                  }
-                });
-              });
-            </script>
           </div>
           <!-- Load -->
           <div class="form-group row">
@@ -73,23 +59,10 @@
                  th:errors="*{sR.load}"></div>
             <label th:for="srLoad" class="col-lg-2 col-form-label" th:text="#{editOrders.load}">Load</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" th:id="srLoad" th:field="*{sR.load.name}" />
+              <input type="text" class="form-control suggester" data-id="srLoadId" data-href="/suggest/party/LOAD" th:id="srLoad"
+                     th:field="*{sR.load.name}" />
               <input type="hidden" class="form-control" th:id="srLoadId" th:field="*{sR.load.id}" />
             </div>
-
-            <script>
-              $(document).ready(function () {
-                $('#srLoad').autocomplete({
-                  serviceUrl: '/suggest/load',
-                  onSelect: function (suggestion) {
-                    $('#srLoadId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srLoadId').val('');
-                  }
-                });
-              });
-            </script>
           </div>
           <!-- Unload -->
           <div class="form-group row">
@@ -97,22 +70,10 @@
                  th:errors="*{sR.unload}"></div>
             <label th:for="srUnload" class="col-lg-2 col-form-label" th:text="#{editOrders.unload}">Unload</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" th:id="srUnload" th:field="*{sR.unload.name}" />
+              <input type="text" class="form-control suggester" data-id="srUnloadId" data-href="/suggest/unload" th:id="srUnload"
+                     th:field="*{sR.unload.name}" />
               <input type="hidden" class="form-control" th:id="srUnloadId" th:field="*{sR.unload.id}" />
             </div>
-            <script>
-              $(document).ready(function () {
-                $('#srUnload').autocomplete({
-                  serviceUrl: '/suggest/unload',
-                  onSelect: function (suggestion) {
-                    $('#srUnloadId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srUnloadId').val('');
-                  }
-                });
-              });
-            </script>
           </div>
           <!-- Unload City -->
           <div class="form-group row">
@@ -120,22 +81,10 @@
                  th:errors="*{sR.unloadCity}"></div>
             <label th:for="srUnloadCity" class="col-lg-2 col-form-label" th:text="#{editOrders.unloadCity}">Unload City</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" th:id="srUnloadCity" th:field="*{sR.unloadCity.name}" />
+              <input type="text" class="form-control suggester" data-id="srUnloadCityId" data-href="/suggest/unloadCity" th:id="srUnloadCity"
+                     th:field="*{sR.unloadCity.name}" />
               <input type="hidden" class="form-control" th:id="srUnloadCityId" th:field="*{sR.unloadCity.id}" />
             </div>
-            <script>
-              $(document).ready(function () {
-                $('#srUnloadCity').autocomplete({
-                  serviceUrl: '/suggest/unloadCity',
-                  onSelect: function (suggestion) {
-                    $('#srUnloadCityId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srUnloadCityId').val('');
-                  }
-                });
-              });
-            </script>
           </div>
 
           <!-- Destination -->
@@ -144,22 +93,10 @@
                  th:errors="*{sR.destination}"></div>
             <label th:for="srDestination" class="col-lg-2 col-form-label" th:text="#{editOrders.destination}">Destination</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" th:id="srDestination" th:field="*{sR.destination.name}" />
+              <input type="text" class="form-control suggester" data-id="srDestinationId" data-href="/suggest/destination" th:id="srDestination"
+                     th:field="*{sR.destination.name}" />
               <input type="hidden" class="form-control" th:id="srDestinationId" th:field="*{sR.destination.id}" />
             </div>
-            <script>
-              $(document).ready(function () {
-                $('#srDestination').autocomplete({
-                  serviceUrl: '/suggest/destination',
-                  onSelect: function (suggestion) {
-                    $('#srDestinationId').val(suggestion.data);
-                  },
-                  onSearchStart: function (params) {
-                    $('#srDestinationId').val('');
-                  }
-                });
-              });
-            </script>
           </div>
           <!-- Appointment Load Date -->
           <div class="form-group row">
@@ -202,7 +139,8 @@
                    th:errors="*{sR.carrierInfo.driverInfo}"></div>
               <label th:for="driverInfo" class="col-lg-2 col-form-label" th:text="#{editOrders.driver}">Driver</label>
               <div class="input-group mb-3 col-lg-10">
-                <input type="text" class="form-control" th:id="driverInfoStr" th:field="*{driverInfoStr}" />
+                <input type="text" class="form-control suggester" data-href="/suggest/driverInfo" data-id="driverInfoId" th:id="driverInfoStr"
+                       th:field="*{driverInfoStr}" />
                 <input type="hidden" class="form-control" th:id="driverInfoId" th:field="*{sR.carrierInfo.driverInfo.id}" />
                 <div class="input-group-append">
                   <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newDriverInfo"
@@ -213,19 +151,6 @@
                   </div>
                 </div>
               </div>
-              <script>
-                $(document).ready(function () {
-                  $('#driverInfoStr').autocomplete({
-                    serviceUrl: '/suggest/driverInfo',
-                    onSelect: function (suggestion) {
-                      $('#driverInfoId').val(suggestion.data);
-                    },
-                    onSearchStart: function (params) {
-                      $('#driverInfoId').val('');
-                    }
-                  });
-                });
-              </script>
             </div>
             <!-- Transport-->
             <div class="form-group row">
@@ -349,6 +274,7 @@
     <div th:replace="fragments/modalForm :: mainModal" />
 
     <script type="text/javascript" src="/js/modalForms.js"></script>
+    <script type="text/javascript" src="/js/suggester.js"></script>
     <div th:replace="fragments/footer :: footer" />
   </body>
 </html>
