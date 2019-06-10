@@ -52,20 +52,6 @@ public class SuggestController {
   }
 
 
-  @GetMapping("/suggest/unload")
-  @ResponseBody
-  public Suggestions getUnloads(@RequestParam(name = "query", defaultValue = "", required = false) String unload) {
-    Suggestions suggestions = new Suggestions();
-    if (unload.length() > 1) {
-      for (SimpleParty p : partyService.findPartyName(PartyType.UNLOAD, unload)) {
-        suggestions.add(String.valueOf(p.getId()), p.getName());
-      }
-    } else {
-      suggestions.add("default", "default");
-    }
-    return suggestions;
-  }
-
   @GetMapping("/suggest/unloadCity")
   @ResponseBody
   public Suggestions getUnloadCity(@RequestParam(name = "query", defaultValue = "", required = false) String unloadCity) {
@@ -76,19 +62,6 @@ public class SuggestController {
     return suggestions;
   }
 
-  @GetMapping("/suggest/destination")
-  @ResponseBody
-  public Suggestions getDestination(@RequestParam(name = "query", defaultValue = "", required = false) String dest) {
-    Suggestions suggestions = new Suggestions();
-    if (dest.length() > 1) {
-      for (SimpleParty p : partyService.findPartyName(PartyType.DESTINATION, dest)) {
-        suggestions.add(String.valueOf(p.getId()), p.getName());
-      }
-    } else {
-      suggestions.add("default", "default");
-    }
-    return suggestions;
-  }
 
   @GetMapping("/suggest/driverInfo")
   @ResponseBody

@@ -70,7 +70,7 @@
                  th:errors="*{sR.unload}"></div>
             <label th:for="srUnload" class="col-lg-2 col-form-label" th:text="#{editOrders.unload}">Unload</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control suggester" data-id="srUnloadId" data-href="/suggest/unload" th:id="srUnload"
+              <input type="text" class="form-control suggester" data-id="srUnloadId" data-href="/suggest/party/UNLOAD" th:id="srUnload"
                      th:field="*{sR.unload.name}" />
               <input type="hidden" class="form-control" th:id="srUnloadId" th:field="*{sR.unload.id}" />
             </div>
@@ -81,7 +81,7 @@
                  th:errors="*{sR.unloadCity}"></div>
             <label th:for="srUnloadCity" class="col-lg-2 col-form-label" th:text="#{editOrders.unloadCity}">Unload City</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control suggester" data-id="srUnloadCityId" data-href="/suggest/unloadCity" th:id="srUnloadCity"
+              <input type="text" class="form-control suggester" data-id="srUnloadCityId" data-href="/suggest/party/CITY" th:id="srUnloadCity"
                      th:field="*{sR.unloadCity.name}" />
               <input type="hidden" class="form-control" th:id="srUnloadCityId" th:field="*{sR.unloadCity.id}" />
             </div>
@@ -93,7 +93,8 @@
                  th:errors="*{sR.destination}"></div>
             <label th:for="srDestination" class="col-lg-2 col-form-label" th:text="#{editOrders.destination}">Destination</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control suggester" data-id="srDestinationId" data-href="/suggest/destination" th:id="srDestination"
+              <input type="text" class="form-control suggester" data-id="srDestinationId" data-href="/suggest/party/DESTINATION"
+                     th:id="srDestination"
                      th:field="*{sR.destination.name}" />
               <input type="hidden" class="form-control" th:id="srDestinationId" th:field="*{sR.destination.id}" />
             </div>

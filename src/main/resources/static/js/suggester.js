@@ -1,5 +1,5 @@
 $(function () {
-  $('.suggester').autocomplete({
+  $('.suggester').devbridgeAutocomplete({
     serviceUrl: function () {
       var url = $(this).data('href');
       return url
