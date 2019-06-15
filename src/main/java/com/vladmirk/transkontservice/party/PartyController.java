@@ -102,6 +102,20 @@ public class PartyController {
     return partyService.saveDriverInfo(update);
   }
 
+  private Transport updateTransport(Transport transport) {
+    Transport update = transport.getId() == null ? new Transport() : partyService.findTransportById(transport.getId()).get();
+    update.setTruckPlateNumber(transport.getTruckPlateNumber());
+    if (transport.getTruckModel().getId() != null)
+      update.setTruckModel(partyService.findPartyName(transport.getTruckModel().getId()).get());
+    if (transport.getTruckType().getId() != null)
+      update.setTruckType(partyService.findPartyName(transport.getTruckType().getId()).get());
+    if (transport.getTrailerType().getId() != null)
+      update.setTrailerType(partyService.findPartyName(transport.getTrailerType().getId()).get());
+    update.setTrailerPlateNumber(transport.getTrailerPlateNumber());
+
+    return partyService.saveTransport(update);
+  }
+
   private PartyName updatePartyName(PartyName partyName) {
     PartyName update = partyName.getId() == null ? new PartyName() : partyService.findPartyName(partyName.getId()).get();
     update.setType(partyName.getType());
@@ -123,10 +137,9 @@ public class PartyController {
     if (bindingResult.hasErrors())
       throw new TransportBindingException(transportForm, bindingResult, model);
 
-//    DriverInfo driverInfo = updateDiverInfo(transportForm.getTransport());
-//    return driverInfo;
-    // TODO:
-    return transportForm.getTransport();
+    Transport transport = updateTransport(transportForm.getTransport());
+    return transport;
   }
+
 }
 

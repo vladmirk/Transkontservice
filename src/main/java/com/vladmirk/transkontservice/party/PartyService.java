@@ -74,6 +74,10 @@ public class PartyService {
     return transportRepository.findTransportByTruckPlateNumberContainingOrTrailerPlateNumberContainingAllIgnoreCase(s, s);
   }
 
+  public Transport saveTransport(Transport transport) {
+    return transportRepository.save(transport);
+  }
+
   public Optional<Transport> findTransportById(Long id) {
     return transportRepository.findById(id);
   }

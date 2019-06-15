@@ -102,7 +102,8 @@
                th:errors="*{transport.truckType.name}"></div>
           <label th:for="truckType" class="col-lg-2 col-form-label" th:text="#{editTransport.truckType}">truckType</label>
           <div class="input-group mb-3 col-lg-10">
-            <input type="text" class="form-control" th:id="truckType" th:field="*{transport.truckType.name}" />
+            <input type="text" class="form-control suggester" th:id="truckType" data-id="truckTypeId" data-href="/suggest/party/TRUCK_TYPE"
+                   th:field="*{transport.truckType.name}" />
             <input type="hidden" class="form-control" th:id="truckTypeId" th:field="*{transport.truckType.id}" />
             <div class="input-group-append">
               <div class="btn btn-outline-secondary modalFormTrigger" type="button" data-href="/party/newParty/TRUCK_TYPE"
